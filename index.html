@@ -1,0 +1,1508 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新北市板橋區 126 里歷年平均收入與所得分布地圖 (100~113年度・官方村里界圖・互動排序版)</title>
+  <style>
+    /* 100% Standalone Native CSS — Works offline & when downloaded directly in any browser */
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --border: #cbd5e1;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #334155;
+      --muted-foreground: #64748b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #0f172a;
+        --foreground: #f8fafc;
+        --card: #1e293b;
+        --border: #334155;
+        --secondary: #334155;
+        --secondary-foreground: #e2e8f0;
+        --muted-foreground: #94a3b8;
+      }
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", "PingFang TC", sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      padding: 12px;
+    }
+    body.in-iframe {
+      background: transparent;
+      padding: 6px;
+    }
+    .app-card {
+      background: var(--card);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 1680px;
+      margin: 0 auto;
+    }
+    .top-bar {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .brand-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(245, 158, 11, 0.16);
+      color: #f59e0b;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .title-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .title-row h2 {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin: 0;
+    }
+    .year-badge {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(245, 158, 11, 0.16);
+      color: #d97706;
+      font-weight: 700;
+    }
+    @media (prefers-color-scheme: dark) {
+      .year-badge { color: #fbbf24; }
+    }
+    .subtitle {
+      font-size: 11.5px;
+      color: var(--muted-foreground);
+      margin-top: 2px;
+    }
+    .controls-group {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .year-stepper {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1px 3px;
+    }
+    .step-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted-foreground);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 6px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .step-btn:hover {
+      color: var(--foreground);
+      background: var(--secondary);
+    }
+    .ctrl-select, .ctrl-btn, .search-box {
+      font-size: 12px;
+      background: var(--background);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+    }
+    .year-stepper select {
+      border: none;
+      background: transparent;
+      color: var(--foreground);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 4px;
+      outline: none;
+      cursor: pointer;
+    }
+    .ctrl-btn:hover {
+      background: var(--secondary);
+    }
+
+    /* Default Side-by-Side (Left Map + Right Inspector/Table) Layout */
+    .main-split {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 12px;
+      width: 100%;
+      height: calc(100vh - 108px);
+      min-height: 520px;
+      max-height: 860px;
+    }
+    .map-panel {
+      flex: 7 1 0%;
+      min-width: 0;
+      position: relative;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .right-panel {
+      flex: 5 1 0%;
+      min-width: 340px;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    /* Optional Vertical (Top-Bottom) Mode when toggled by user */
+    .main-split.layout-vertical {
+      flex-direction: column;
+      height: auto;
+      max-height: none;
+    }
+    .main-split.layout-vertical .map-panel {
+      flex: none;
+      width: 100%;
+      height: 540px;
+    }
+    .main-split.layout-vertical .right-panel {
+      flex: none;
+      width: 100%;
+      max-width: none;
+      height: 480px;
+    }
+
+    /* Compact height when embedded inside Antigravity Chat iframe */
+    body.in-iframe .main-split:not(.layout-vertical) {
+      height: 385px;
+      min-height: 385px;
+      max-height: 385px;
+    }
+
+    .zone-banner {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 10;
+      background: var(--card);
+      opacity: 0.94;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      pointer-events: none;
+      max-width: 320px;
+    }
+    .banner-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+    .banner-sub {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      margin-top: 1px;
+    }
+    .zoom-controls {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .compass-box, .zoom-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--foreground);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .compass-box {
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .compass-arrow {
+      color: #f43f5e;
+      font-size: 10px;
+    }
+    .zoom-btn {
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .zoom-btn:hover {
+      background: var(--secondary);
+    }
+    .map-viewport {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      cursor: grab;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-viewport:active {
+      cursor: grabbing;
+    }
+    .map-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .map-tooltip {
+      position: absolute;
+      z-index: 20;
+      pointer-events: none;
+      background: var(--card);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .hidden {
+      display: none !important;
+    }
+    .legend-bar {
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .legend-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted-foreground);
+    }
+    .legend-items {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--foreground);
+    }
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(0,0,0,0.2);
+      display: inline-block;
+    }
+
+    /* Right Inspector + Table Column */
+    .detail-card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .detail-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .detail-title-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+    }
+    .rank-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #d97706;
+    }
+    @media (prefers-color-scheme: dark) {
+      .rank-badge { color: #fbbf24; }
+    }
+    .detail-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .zone-pill {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+    }
+    .units-label {
+      font-size: 11.5px;
+      color: var(--muted-foreground);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+    .kpi-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 4px;
+    }
+    .kpi-label {
+      font-size: 10.5px;
+      color: var(--muted-foreground);
+    }
+    .kpi-val {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+    .text-amber { color: #d97706; }
+    .text-emerald { color: #059669; }
+    .text-rose { color: #e11d48; }
+    @media (prefers-color-scheme: dark) {
+      .text-amber { color: #fbbf24; }
+      .text-emerald { color: #34d399; }
+      .text-rose { color: #fb7185; }
+    }
+    .trend-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .trend-header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .trend-svg {
+      width: 100%;
+      height: 44px;
+      overflow: visible;
+      display: block;
+    }
+
+    /* Table Card & Interactive Sorting */
+    .table-card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-height: 0;
+    }
+    .search-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: nowrap;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 90px;
+      background: var(--card);
+      cursor: text;
+      padding: 4px 8px;
+    }
+    .sort-group {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+    .sort-select {
+      font-size: 11.5px;
+      background: var(--card);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 3px 5px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+    .dir-btn {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--card);
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 3px 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .dir-btn:hover {
+      background: var(--secondary);
+    }
+    .list-count {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      flex-shrink: 0;
+    }
+    .table-scroll {
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+      padding-right: 2px;
+    }
+    .rank-table {
+      width: 100%;
+      text-align: left;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .rank-table thead {
+      position: sticky;
+      top: 0;
+      background: var(--background);
+      border-bottom: 1px solid var(--border);
+      color: var(--muted-foreground);
+      font-size: 11px;
+      z-index: 2;
+    }
+    .rank-table th, .rank-table td {
+      padding: 5px 5px;
+    }
+    .sortable-th {
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.12s ease, background 0.12s ease;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .sortable-th:hover {
+      color: var(--foreground);
+      background: var(--secondary);
+    }
+    .sortable-th.active-sort {
+      color: #d97706;
+      font-weight: 700;
+    }
+    @media (prefers-color-scheme: dark) {
+      .sortable-th.active-sort {
+        color: #fbbf24;
+      }
+    }
+    .sort-arrow {
+      font-size: 9.5px;
+      margin-left: 2px;
+      opacity: 0.75;
+    }
+    .rank-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    .rank-table tbody tr:hover {
+      background: var(--card);
+    }
+    .rank-table tbody tr.row-selected {
+      background: rgba(245, 158, 11, 0.15);
+      font-weight: 600;
+    }
+    .text-right {
+      text-align: right;
+    }
+
+    .vill-path {
+      transition: fill 0.18s ease, opacity 0.18s ease, stroke-width 0.12s ease;
+      cursor: pointer;
+      vector-effect: non-scaling-stroke;
+    }
+    .vill-path:hover {
+      stroke: #0f172a !important;
+      stroke-width: 2.2px !important;
+      filter: brightness(1.06);
+    }
+    .vill-selected {
+      stroke: #2563eb !important;
+      stroke-width: 2.8px !important;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.45);
+      border-radius: 9999px;
+    }
+    .trend-pt {
+      cursor: pointer;
+      transition: r 0.12s ease;
+    }
+    .trend-pt:hover {
+      r: 4.5px;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if (window.self !== window.top) {
+      document.body.classList.add("in-iframe");
+    }
+  </script>
+  <div class="app-card">
+    
+    <!-- Top Header & Controls -->
+    <div class="top-bar">
+      <div class="brand-group">
+        <span class="brand-icon">板</span>
+        <div>
+          <div class="title-row">
+            <h2>新北市板橋區 126 里歷年所得地圖</h2>
+            <span id="header-year-badge" class="year-badge">113年度 (2024・最新)</span>
+          </div>
+          <p id="header-summary" class="subtitle">全區總計 178,768 納稅戶｜全區平均 97.8 萬（978 千元）｜100~113年歷年查詢</p>
+        </div>
+      </div>
+
+      <!-- Year, Metric, Zone & Layout Controls -->
+      <div class="controls-group">
+        <div class="year-stepper">
+          <button id="year-prev" title="上一年度" class="step-btn">◀</button>
+          <select id="year-select">
+            <option value="113" selected>113年 (2024 最新)</option>
+            <option value="112">112年 (2023)</option>
+            <option value="111">111年 (2022)</option>
+            <option value="110">110年 (2021)</option>
+            <option value="109">109年 (2020)</option>
+            <option value="108">108年 (2019)</option>
+            <option value="107">107年 (2018)</option>
+            <option value="106">106年 (2017)</option>
+            <option value="105">105年 (2016)</option>
+            <option value="104">104年 (2015)</option>
+            <option value="103">103年 (2014)</option>
+            <option value="102">102年 (2013)</option>
+            <option value="101">101年 (2012)</option>
+            <option value="100">100年 (2011)</option>
+          </select>
+          <button id="year-next" title="下一年度" class="step-btn">▶</button>
+        </div>
+
+        <select id="metric-select" class="ctrl-select">
+          <option value="a" selected>地圖上色：平均數</option>
+          <option value="m">地圖上色：中位數</option>
+          <option value="q3">地圖上色：第三分位數 Q3</option>
+          <option value="q1">地圖上色：第一分位數 Q1</option>
+          <option value="sd">地圖上色：標準差 (差距)</option>
+          <option value="u">地圖上色：納稅戶數</option>
+        </select>
+
+        <select id="zone-select" class="ctrl-select">
+          <option value="ALL">全部生活圈 (126里)</option>
+          <option value="新板・府中">新板・府中 (18里)</option>
+          <option value="江翠生活圈">江翠生活圈 (23里)</option>
+          <option value="後埔・亞東">後埔・亞東 (21里)</option>
+          <option value="埔墘・光復">埔墘・光復 (17里)</option>
+          <option value="新埔・社後">新埔・社後 (29里)</option>
+          <option value="浮洲・溪崑">浮洲・溪崑 (18里)</option>
+        </select>
+
+        <button id="toggle-labels" class="ctrl-btn">里名: 開</button>
+        <button id="toggle-landmarks" class="ctrl-btn">地標: 開</button>
+        <button id="toggle-layout" class="ctrl-btn" title="切換左右並排或上下排列">版型: 左右並排</button>
+      </div>
+    </div>
+
+    <!-- Main 2-Column Side-by-Side Layout -->
+    <div id="main-split" class="main-split">
+      
+      <!-- Left: Interactive SVG Choropleth Map -->
+      <div class="map-panel">
+        
+        <!-- Floating Top-Left Info / Sub-district KPI -->
+        <div id="zone-banner" class="zone-banner">
+          <div id="banner-title" class="banner-title">113年 板橋區全區 (126里)</div>
+          <div id="banner-sub" class="banner-sub">最高：福丘里 203.1萬｜最低：歡園里 60.0萬</div>
+        </div>
+
+        <!-- Floating Top-Right Compass & Zoom Controls -->
+        <div class="zoom-controls">
+          <div title="北方朝上 (TWD97 / WGS84 正北)" class="compass-box">
+            <span class="compass-arrow">▲</span>
+            <span>N</span>
+          </div>
+          <button id="zoom-in" title="放大" class="zoom-btn">+</button>
+          <button id="zoom-out" title="縮小" class="zoom-btn">−</button>
+          <button id="zoom-reset" title="重設視角" class="zoom-btn" style="font-size:12px;">↺</button>
+        </div>
+
+        <!-- SVG Map Viewport -->
+        <div id="map-container" class="map-viewport">
+          <svg id="map-svg" viewBox="0 0 1000 1000" class="map-svg">
+            <g id="map-root">
+              <g id="context-layer" pointer-events="none"></g>
+              <g id="villages-layer"></g>
+              <path id="district-outline" d="M265.2,795.9L271.2,785.4L271.9,779.9M238.3,862L237.8,857.7L235.2,849.8L235,841.8L235.6,837.7L240.3,824.3L242.9,819.9L246.4,816.2L261.7,804.6L265.2,795.9M217.2,911.6L224.4,905.9L229.1,898.2L232.8,888.1L238.3,862M163.9,952L172.8,945.2L180,941.6L184.2,938.1L186.7,933.8L195.3,930L201.5,925.6L205,921.9L211.9,917L217.2,911.6M131.3,853.6L134,861.6L134.8,870.3L137.3,877.2L139.1,885.6L141.2,908.3L140.8,925L139.5,936.8L138.4,940.6L140.5,943.4L150,949.4L163.9,952M134,840.8L129.5,844.9L130.1,850.4L131.3,853.6M134,840.8L136.9,836L138.7,827L137.8,820.1L136.1,817.1L137.9,811.5L136.9,792.2L135.4,788.7L132.7,787.1L128.6,782.7L126.2,779.1L124.7,774.6M124.7,774.6L123.5,770.1L120.6,765.8L118.3,760.1L113.9,755.8L111.5,752.4L110.7,750L112.3,735.9L115.3,727.3L120,719.1L125.4,712.6L131.1,707.4M303.2,706.2L301.8,722M291.6,748.1L293.9,744.4L300.3,737.2L301.8,722M271.9,779.9L278.9,761.3L280.2,760.1L283.6,759.7L286.5,758.3L288.3,755.8L291.6,748.1M131.1,707.4L136.3,702.4L144.6,696.7L153,689L153.3,688.5L148.5,685.1L151,681.4M602.3,713.7L604.1,711.8L608.1,710.7M556.7,722.6L558.3,721.5L561.4,721.1L564.5,724.1L574.8,722.6L580.2,725.5L582.6,723.7L582.3,721.2L582.9,720.2L585.8,721.7L590.9,717.9L600.9,716.7L602.3,713.7M546.7,712.7L553.4,724.1L554.8,724.4L556.7,722.6M546.4,712.3L546.7,712.7M479.3,636.6L472.5,660.2L471,663L464.9,666.2L465,673.7M456.6,699.6L457.2,699.6L461.4,690.7L462.7,682.9L465.3,678L465,673.7M373.4,688.3L378.4,687.2L382.5,688.4L396.8,682L407.3,679.1L411,676.9L416,671.8L418.7,673.7L422.4,680.7L435,687.1L449.3,697.9L456.6,699.6M332.3,674.3L340.8,688.4L348.2,697.4L350.4,699L354,696.5L364.3,691.5L373.4,688.3M594.3,642.2L613.9,667.4L617,673.6L623.9,669.9L624.9,669.9L627.5,673.1M620.9,703L622.1,698.5L618.8,698L616.1,698.8L616,698.3L620.1,694.5L623.6,689.6L626.6,687.2L628.4,680.8L628.4,676.8L627.5,673.1M608.1,710.7L611.5,708.9L614.7,708.3L620.9,703M543.3,706.9L544.6,707.8L546.4,712.3M538.4,704L543.3,706.9M499.9,672.5L499.6,678.1L503.7,687.2L504,692.3L505.9,694.4L513.5,698.1L531.1,699.2L538.4,704M495.9,628.3L495,649.8L495.6,655.3L500.1,670.9L499.9,672.5M594.3,642.2L592.2,639.2L592.1,637.3L597.3,626.6L601.6,619.6M303.2,706.2L305.4,683.6L309.6,678.4L311.2,684.1L323.6,683.5L328.7,676.9L331.4,674.3L332.3,674.3M163.2,678.7L156.2,673.8L151,681.4M179.3,643.3L170.2,659.6L168.7,661.5L164.7,664.1L164.1,665.4L164.1,677L163.2,678.7M179.3,643.3L189.7,628.9L189.7,627.1L185.9,620.3L186.7,610.6L188,604.8L194.7,594.1L200,588.9M200,588.9L212.6,580.5L220.1,577L229,576.9L235.6,575.5L236.9,576.3L237.4,579.6L254.2,578.6L255.3,577.2M255.3,577.2L256.4,569M617.1,550.4L616.6,550.4M616.6,550.5L616.6,550.4M610.9,598.5L612.8,593.8L616.2,580.6L620.1,573.7L620,570L618.8,567.7L614.2,562.4L611.8,552.3L612.8,551.1L616.6,550.5M603.5,617.1L609.2,609L606.4,606.5L607,604.5L610.9,598.5M601.6,619.6L603.5,617.1M479.3,636.6L480.4,635.1L494.1,629.2M256.4,569L262.8,537.6L262.9,531.9L261.2,518.4M637.3,523.5L639.1,528.7L643,534.3L642.6,535.3M617.1,550.4L623.9,549.1L623.4,541.3L632.9,538.9L642.6,535.3M637.3,523.5L637,520.4L637.5,520M673.2,491.8L675.1,491M637.5,520L644.1,515.2L650.9,507.4L658.9,499.7L673.2,491.8M675.1,491L681.2,487.7L684.1,487.1L687.7,484.1M494.1,629.2L495.9,628.3M261.2,518.4L260.5,508.6L260.5,488.8L262.5,478.6L262.6,473.8L263.9,469.5M263.9,469.5L269.6,440.6L276.2,424.8L282.4,413.1M711.4,461.4L718,452.1L724.7,444.9L728.6,436.4L735.2,431.4M701.1,471.7L711.4,461.4M687.7,484.1L699.1,472.8L701.1,471.7M805.9,404.3L803.8,407.3L804.3,408.7L803,411.3L809.6,416.9L807.7,429.5M735.2,431.4L738.6,429.3L742.9,428.4L762.7,430.1L774.1,426.8L793,424.4L801.9,425.8L804.9,428.7L807.7,429.5M810.1,377L813.7,385.6L810.5,398.5L805.9,404.3M810.1,377L807.1,370L834.1,369.7M282.4,413.1L291.9,398.5L305.3,374.7L310.3,367.7L317.8,359.2L331.4,338.5L352,302.9M352,302.9L364.1,280.8M364.1,280.8L369.5,268.6M888.3,265.5L889.3,268L888.3,271.7L886.6,287.5M886.6,287.5L886.3,289.8M886.3,289.8L884.4,298.8L884.5,301.8M884.5,301.8L884.5,302.6M884.5,302.6L884.5,313.1L885.9,322.2M885.9,322.2L885.9,322.7M885.9,322.7L886.5,337.7L886.1,349.2L886.8,357M886.8,357L886.9,357.7M886.9,357.7L888,369.2M888,369.2L888,369.2M834.1,369.7L888,369.2M888.2,265.3L888.3,265.5M871.5,214.1L874,218.1M874,218.1L874.3,219.1M874.3,219.1L874.6,231.8L887.6,263.7M887.6,263.7L888,264.9M888,264.9L888.2,265.3M871.3,214L871.5,214.1M862.8,202.3L866,209.3L870.4,213.3M870.4,213.3L871.3,214M861.8,200L862.8,202.3M847.2,169.1L861.3,198.7M861.3,198.7L861.8,200M846.8,168.1L847.2,169.1M405,214.9L393.3,233.1L375.2,258.4L369.5,268.6M447.5,166.7L437.1,176.8L405,214.9M447.5,166.7L453.8,161M453.8,161L480.3,140M833.9,133.6L834.1,134.1M834.1,134.1L838.8,146.5L841.9,157.7L846.1,166.9M846.1,166.9L846.8,168.1M480.3,140L518.6,114.6M518.6,114.6L530.9,107.8L556.5,91.5M556.5,91.5L577,80.9L600.1,71.4L616.8,65.5M616.8,65.5L635.7,60.1L656.6,56.1L685.8,53.9M846.1,56.1L836.9,68.9L831,81.1L827.2,95.2L826.9,108.5M826.9,108.5L827.5,111.4M827.5,111.4L830.2,123.7L833.1,131.5M833.1,131.5L833.9,133.6M685.8,53.9L724.3,52.4L766.2,48L772.6,48.5L795.8,54.4L808.7,54.7L823.4,56.5L846.1,56.1" fill="none" stroke="rgba(15,23,42,0.75)" stroke-width="1.8" pointer-events="none" style="vector-effect: non-scaling-stroke;" />
+              <g id="labels-layer" pointer-events="none"></g>
+              <g id="landmarks-layer" pointer-events="none"></g>
+            </g>
+          </svg>
+          <!-- Floating Hover Tooltip -->
+          <div id="map-tooltip" class="map-tooltip hidden"></div>
+        </div>
+
+        <!-- Bottom Legend Bar -->
+        <div class="legend-bar">
+          <span id="legend-title" class="legend-title">平均數 (萬元)</span>
+          <div id="legend-items" class="legend-items"></div>
+        </div>
+      </div>
+
+      <!-- Right: Village Inspector + Interactive Sortable Ranking Table -->
+      <div class="right-panel">
+        
+        <!-- Selected Village Detail + Multi-Year Trend Card -->
+        <div class="detail-card">
+          <div class="detail-header">
+            <div class="detail-title-group">
+              <span id="detail-rank" class="rank-badge">平均 #1</span>
+              <h3 id="detail-name" class="detail-name">福丘里</h3>
+              <span id="detail-zone" class="zone-pill">新板・府中</span>
+            </div>
+            <span id="detail-units" class="units-label">113年｜2,022 戶</span>
+          </div>
+
+          <!-- Key Metrics Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-box">
+              <div class="kpi-label">平均數</div>
+              <div id="detail-avg" class="kpi-val text-amber">203.1萬</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-label">中位數</div>
+              <div id="detail-med" class="kpi-val text-emerald">102.1萬</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-label">Q1~Q3區間</div>
+              <div id="detail-q1q3" class="kpi-val">44~245萬</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-label">標準差</div>
+              <div id="detail-sd" class="kpi-val">318.6萬</div>
+            </div>
+          </div>
+
+          <!-- Interactive 100~113 Historical Trend Chart -->
+          <div class="trend-box">
+            <div class="trend-header">
+              <span style="color:var(--muted-foreground); font-weight:500;">100~113年歷年走勢 <span style="opacity:0.75;">(點擊節點切換年份)</span></span>
+              <span id="detail-growth" class="text-amber" style="font-weight:600;">14年成長 +35.0%</span>
+            </div>
+            <svg id="trend-svg" viewBox="0 0 320 54" class="trend-svg"></svg>
+          </div>
+        </div>
+
+        <!-- Search + Sort Controls + Sortable Ranking Table -->
+        <div class="table-card">
+          <div class="search-row">
+            <input id="search-input" type="text" placeholder="搜尋里名或生活圈..." class="search-box" />
+            <div class="sort-group">
+              <select id="sort-select" class="sort-select" title="選擇排序欄位">
+                <option value="a" selected>排序: 平均數</option>
+                <option value="m">排序: 中位數</option>
+                <option value="yoy">排序: 年增率%</option>
+                <option value="g14">排序: 14年成長%</option>
+                <option value="u">排序: 納稅戶數</option>
+                <option value="q3">排序: Q3門檻</option>
+                <option value="q1">排序: Q1門檻</option>
+                <option value="sd">排序: 標準差</option>
+                <option value="n">排序: 里名筆畫</option>
+              </select>
+              <button id="sort-dir-btn" class="dir-btn" title="點擊切換：高→低 / 低→高">▼ 高→低</button>
+            </div>
+            <span id="list-count" class="list-count">126里</span>
+          </div>
+
+          <div class="table-scroll custom-scroll">
+            <table class="rank-table">
+              <thead>
+                <tr>
+                  <th style="width:28px;">#</th>
+                  <th class="sortable-th" data-sort="n" title="點擊依里名排序">里別<span id="arrow-n" class="sort-arrow"></span></th>
+                  <th class="sortable-th text-right active-sort" data-sort="a" title="點擊依平均數排序">平均數<span id="arrow-a" class="sort-arrow">▼</span></th>
+                  <th class="sortable-th text-right" data-sort="m" title="點擊依中位數排序">中位數<span id="arrow-m" class="sort-arrow"></span></th>
+                  <th class="sortable-th text-right" data-sort="yoy" title="點擊依年增率排序">年增%<span id="arrow-yoy" class="sort-arrow"></span></th>
+                  <th class="sortable-th text-right" data-sort="u" title="點擊依納稅戶數排序">戶數<span id="arrow-u" class="sort-arrow"></span></th>
+                </tr>
+              </thead>
+              <tbody id="ranking-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const VILL_GEOMS = [["福丘里","新板・府中",590.3,426.6,"M644.3,402.5L587.3,432.2L592,442.8L586.6,457.6L580.5,455.4L584.2,476.3L562.6,480.9L551,473.1L555.7,466.2L552.2,463.9L554.4,460.7L551.3,458.4L545.1,453.7L564.1,429L577.9,410.7L581.5,406.9L621.9,372.8Z"],["深丘里","新板・府中",641.2,439.5,"M678,414.6L682.9,423L689.9,426.2L703.4,416.8L707.3,420.7L707.3,422.9L709,424.7L703.1,436.8L703.8,438.8L698.6,444.7L694.6,447.4L696.6,451.1L677.3,460.1L648.4,457.2L623.2,462.3L611,465.5L607.7,464.7L602.2,462L596.5,474.4L584.2,476.3L580.5,455.4L586.6,457.6L592,442.8L587.3,432.2L644.3,402.5L658.9,425.6Z"],["挹秀里","新板・府中",534.6,444.1,"M564.1,429L545.1,453.7L522.1,482.2L518.4,468.1L514.3,465.9L509.8,451.6L509.5,443.5L515.8,441.3L517.2,442.5L542.9,411.1Z"],["華東里","後埔・亞東",445.8,610.4,"M481.5,552.6L475.7,559L476.2,562.9L492.8,564.9L485.7,609.9L491.8,614.9L493.3,627.1L494.1,629.2L480.4,635.1L479.3,636.6L478.4,636L440,653.8L430.5,658.8L424.7,663.1L420.7,667.1L417,667.1L393.5,662.8L366.2,657L374.7,651.3L382.8,643.2L384.3,640.5L384.7,638.1L388.4,633.9L397.3,628.1L415.6,616.9L426.6,606.2L440.5,587.9L446.8,569.6L450.2,555L451.3,531.2L466.8,530.6L471.7,529.3L478.4,526.2L471,543.4Z"],["忠翠里","江翠生活圈",706.5,223.5,"M704.3,191.8L723.7,206.8L730.9,212.1L736.3,218.1L750.1,245.5L736.1,258.2L727.8,264.4L722.7,266.4L715.3,267.1L711.4,267L711.2,256.2L712.9,249.5L716.2,243.7L720.7,241.1L714.7,232.6L708.8,228.4L697.3,221.8L684.5,241.9L660.5,228.5L674.2,201.5L678.7,194L689.7,180.6Z"],["溪頭里","江翠生活圈",634.9,109.1,"M669.9,161.4L660.8,165.5L651.9,153L647.2,144.1L621,152.7L587.4,163.6L556.5,91.5L577,80.9L600.1,71.4L616.8,65.5L635.7,60.1L656.6,56.1L685.8,53.9L700.7,125.9L701.4,133.9L702.9,136.9Z"],["和平里","後埔・亞東",565.0,658.4,"M575.8,644.6L574,646.5L567.5,648.1L570.3,665.2L584.4,659L587.6,668.1L583.8,669.3L583.9,670L588.2,668.5L589.9,671.4L582.2,676.1L584.6,684.9L574,691.7L571.3,672.3L569.7,671.8L566.2,672.5L564.4,671.4L558,660.8L556.4,652L536.8,652.8L537.3,637.6L546,636.1L546.7,644.1L551.9,641L572.6,636.8Z"],["華江里","江翠生活圈",659.4,281.0,"M673.5,263.2L679.7,264.9L695.5,266.9L689.1,269.7L686.8,271.6L684.5,276.3L683.3,284.7L680.9,289.6L676.8,294.9L673.2,297.8L658.3,306.1L652.8,297.1L643.8,296.1L637.3,294.5L630.2,294.6L628.7,294L627.8,292.1L643.2,262L652.1,262.2L660.6,263.5L665.6,262.6Z"],["民族里","後埔・亞東",656.4,471.7,"M677.3,460.1L687.7,484.1L684.1,487.1L681.2,487.7L675.1,491L629.4,473.5L611,465.5L623.2,462.3L648.4,457.2Z"],["黃石里","新板・府中",514.0,424.1,"M533.1,399.3L542.9,411.1L517.2,442.5L515.8,441.3L509.5,443.5L509.8,451.6L508.1,451.5L507.2,447.9L499.7,448.1L499.7,446.1L502.4,445.9L502.4,444.6L492.5,445.8L490.2,446.7L489,442.1L492,441L490.2,436.4L494.5,434.5L491.1,425.6L485.7,427.2L483.6,424.9L490.2,420.9L494.4,419.6L495.2,420L531.9,397.7Z"],["莊敬里","埔墘・光復",684.2,308.0,"M709.3,305.2L688.8,321.6L675.7,332.4L658.3,306.1L673.2,297.8L676.8,294.9L680.9,289.6L683.3,284.7L684.2,289.9L686.4,293.2L688.5,294.4L708.6,292.2Z"],["柏翠里","江翠生活圈",754.9,94.3,"M846.1,56.1L836.9,68.9L831,81.1L827.2,95.2L826.9,108.5L827.5,111.4L830.2,123.7L833.1,131.5L833.9,133.6L787.3,121.1L772.2,116.8L747.3,110.6L706.5,159.5L689.7,180.6L673.5,166.6L669.9,161.4L702.9,136.9L701.4,133.9L700.7,125.9L685.8,53.9L724.3,52.4L766.2,48L772.6,48.5L795.8,54.4L808.7,54.7L823.4,56.5Z"],["後埔里","後埔・亞東",578.9,492.9,"M596.5,474.4L593.7,482.2L589.9,482.8L593.5,507.1L571.7,510.8L567.8,511.5L562.6,480.9L584.2,476.3Z"],["聯翠里","江翠生活圈",637.9,241.1,"M657.6,234.2L643.2,262L632,261.2L627.9,252.9L617.8,232.4L642.9,220.7L650,232.8L651.4,229.1Z"],["文化里","新埔・社後",639.8,208.7,"M674.2,201.5L660.5,228.5L657.6,234.2L651.4,229.1L650,232.8L642.9,220.7L617.8,232.4L609.8,214.6L619.7,209.6L614.5,198.2L633.6,183.5L638.7,175.7L646.8,180.6L644.3,202.3L661.6,199.6L671.1,200.4Z"],["百壽里","新板・府中",636.9,323.9,"M647.5,345L635,332.9L616.4,319.7L612.6,315.9L620.9,304L623.1,305.4L622.5,308.8L638.9,314.6L646.5,318.1L655,322.7L659.6,327.1L653.9,334.4Z"],["忠誠里","新埔・社後",596.3,296.2,"M605.9,283.6L617.4,288.6L627.8,292.1L620.9,304L612.6,315.9L605.5,325.7L600.1,321.4L598.5,323.8L580.2,309.7L573.3,307.7L574.4,302.5L572.8,296.8L576.1,287.8L578.8,272.6L581,266.7L579.5,253.7L590.9,271.2L601.9,281.2Z"],["龍翠里","江翠生活圈",756.9,221.7,"M762.6,201.8L767.5,211.5L773.3,207.7L787.2,226.4L770.5,238.3L767.9,239.3L763.1,239.7L750.1,245.5L736.3,218.1L730.9,212.1L723.7,206.8L730,199.8L737,199.8L737.2,204.3L741.8,210L745.3,208.6L748.5,208.4L752.5,208.8L754.4,210.1L759,208.2L755.9,205.7Z"],["海山里","新板・府中",710.1,444.2,"M735.2,431.4L728.6,436.4L724.7,444.9L718,452.1L711.4,461.4L701.1,471.7L699.1,472.8L687.7,484.1L677.3,460.1L696.6,451.1L694.6,447.4L698.6,444.7L703.8,438.8L703.1,436.8L709,424.7L709.2,421L709.9,420.1L712,420.6L714.7,418.8L727.1,410.9L732.1,407.3L740.7,416.5L740.3,420.8Z"],["景星里","後埔・亞東",550.2,492.8,"M562.6,480.9L567.8,511.5L539,517L534.7,484.5L542.2,471.3L551.3,458.4L554.4,460.7L552.2,463.9L555.7,466.2L551,473.1Z"],["福星里","後埔・亞東",555.8,540.5,"M580.3,548.1L580.5,555.4L575.6,556.1L534.9,566.7L530.8,575.3L524.4,573.9L541,539.1L541.6,535.2L539,517L567.8,511.5L571.7,510.8Z"],["赤松里","新板・府中",493.0,451.0,"M508.1,451.5L508.1,454.3L497.2,454.1L496.9,455.4L489.2,455.8L489.2,457.8L487.7,458.2L486.4,453.5L478.1,455.5L476.7,450.1L490.2,446.7L492.5,445.8L502.4,444.6L502.4,445.9L499.7,446.1L499.7,448.1L507.2,447.9Z"],["福壽里","埔墘・光復",771.5,415.5,"M770.2,402.2L798.2,401.7L805.9,404.3L803.8,407.3L804.3,408.7L803,411.3L809.6,416.9L807.7,429.5L804.9,428.7L801.9,425.8L793,424.4L774.1,426.8L762.7,430.1L742.9,428.4L738.6,429.3L735.2,431.4L740.3,420.8L740.7,416.5L732.1,407.3L747.3,397.6L755.7,408.6L760.4,412.9L769.4,412.7Z"],["中正里","新埔・社後",444.7,235.7,"M502.9,184.6L491.2,192.5L494.4,196.7L501.6,220.6L489.6,226.8L479.3,221.9L477.1,224.5L474.7,234.2L474.2,254.1L492.4,269.3L492.3,279.7L489.9,279L488.2,277.4L485,276.6L484.7,275.3L481.5,274.4L478.9,271.6L471.9,270.9L471.3,286.6L472,290.5L478.5,306.5L472.2,310.7L468.8,314.3L468.2,316.9L462.9,320L461.7,317.1L455.2,315.2L445.7,310.4L441.4,310L413.6,295.2L369.5,268.6L375.2,258.4L393.3,233.1L405,214.9L437.1,176.8L447.5,166.7L453.8,161L480.3,140L488.8,159L495.4,169.7Z"],["宏翠里","江翠生活圈",535.3,148.2,"M587.4,163.6L581.1,165.7L581.2,169.5L580.4,170.5L567.8,176.1L569.5,179.4L560.8,184.9L559.2,182.1L541.5,192L532.7,178.3L528.7,181.7L531,185.2L510.8,198.2L502.9,184.6L495.4,169.7L488.8,159L480.3,140L518.6,114.6L530.9,107.8L556.5,91.5Z"],["國光里","新埔・社後",526.6,334.4,"M554.2,328.9L556.4,331.3L559.2,333L547.6,335.6L509.5,344.5L497.3,350.2L495.8,346.6L506.1,342.6L502.8,332.5L504.4,332L536,325.3L545.2,323L545,322.2L547.2,321.8L549.2,330.3Z"],["流芳里","新板・府中",508.0,471.6,"M509.8,451.6L514.3,465.9L518.4,468.1L522.1,482.2L513.9,491.3L496.7,478.2L497.8,469.7L495.9,468L496.9,455.4L497.2,454.1L508.1,454.3L508.1,451.5Z"],["介壽里","新埔・社後",649.8,316.7,"M658.3,306.1L675.7,332.4L652.3,350.5L647.5,345L653.9,334.4L659.6,327.1L655,322.7L646.5,318.1L638.9,314.6L622.5,308.8L623.1,305.4L620.9,304L627.8,292.1L628.7,294L630.2,294.6L637.3,294.5L643.8,296.1L652.8,297.1Z"],["江翠里","江翠生活圈",655.3,174.6,"M669.9,161.4L673.5,166.6L689.7,180.6L678.7,194L674.2,201.5L671.1,200.4L661.6,199.6L644.3,202.3L646.8,180.6L638.7,175.7L629.1,167.7L626.2,164.3L622.3,157.6L621,152.7L647.2,144.1L651.9,153L660.8,165.5Z"],["長安里","新板・府中",681.0,403.2,"M727.1,410.9L714.7,418.8L707.3,410.4L700.2,403.8L697.5,404.1L686.4,409.5L678,414.6L658.9,425.6L644.3,402.5L670,389.8L685.2,381.4L718.5,404Z"],["富貴里","埔墘・光復",794.7,344.0,"M821.1,333.5L823.7,341.5L806.3,351.1L793.6,356L773.6,356.4L773.6,336.5L780.8,335.8L780.9,334.4L802.3,332.6L802.8,333.4L808.3,333.3L808.9,335.9L819.8,336.5Z"],["廣德里","後埔・亞東",597.9,576.6,"M617.1,550.4L616.6,550.4L616.6,550.5L612.8,551.1L611.8,552.3L614.2,562.4L618.8,567.7L620,570L620.1,573.7L616.2,580.6L612.8,593.8L610.9,598.5L607,604.5L606.4,606.5L609.2,609L603.5,617.1L601.6,619.6L596.4,619.1L590.2,603.3L587.6,603.6L584.5,591.4L578.2,573.4L575.6,556.1L580.5,555.4L580.3,548.1L603.1,544.3Z"],["西安里","新板・府中",685.7,364.5,"M742.6,351.2L704.4,371.7L703.6,371.4L685.2,381.4L676,376.3L666.8,372.5L652.3,368.1L643.3,357.1L652.3,350.5L653.2,352L658.4,352.6L663.8,355.3L665.5,356.5L667.1,359.2L686.1,365.2L689,358.4L698.1,363L716.2,359L721.7,356.6L734.3,348.8L738.9,344.6Z"],["埤墘里","埔墘・光復",704.5,283.1,"M711.4,267L715.3,267.1L716.5,274.2L711.6,274.8L712,281.2L719.4,280.3L725.4,283.5L733.3,285.7L709.3,305.2L708.6,292.2L688.5,294.4L686.4,293.2L684.2,289.9L683.3,284.7L684.5,276.3L686.8,271.6L689.1,269.7L695.5,266.9Z"],["漢生里","新板・府中",563.4,362.0,"M592,343.9L542.9,411.1L533.1,399.3L545,390.8L551.2,382.1L552.8,377.5L554.4,375.5L558.1,373.7L558.8,369.9L557.5,367.7L557.7,360.1L557.1,358.1L554.9,356.3L551.4,356.2L550.8,353.5L553.2,348.4L547.6,335.6L559.2,333L569.7,332.3L576.8,333.4L584.3,337.7Z"],["文德里","新埔・社後",568.6,273.9,"M579.5,253.7L581,266.7L578.8,272.6L576.1,287.8L572.8,296.8L574.4,302.5L573.3,307.7L572.4,303.6L550.6,267L578.3,251Z"],["自強里","新埔・社後",482.3,400.6,"M494.4,419.6L490.2,420.9L483.6,424.9L477.5,428.8L470.6,411.3L465,392.6L464.5,389.6L465.8,380.5L482.1,382.7L482.7,379L483.3,379.7L488.7,380.9L498.9,382.4L498.5,391.3Z"],["莒光里","新埔・社後",664.1,248.5,"M684.5,241.9L674.7,257.9L673.6,260.5L673.5,263.2L665.6,262.6L660.6,263.5L652.1,262.2L643.2,262L657.6,234.2L660.5,228.5Z"],["新民里","新板・府中",597.0,370.1,"M647.5,345L652.3,350.5L643.3,357.1L621.9,372.8L581.5,406.9L577.9,410.7L564.1,429L542.9,411.1L592,343.9L605.5,325.7L612.6,315.9L616.4,319.7L635,332.9Z"],["新翠里","江翠生活圈",564.0,239.3,"M594.8,245.9L579.5,253.7L578.3,251L550.6,267L543.6,255.2L533,236.7L580.5,208.5L581.1,209.6L580.2,221Z"],["鄉雲里","後埔・亞東",517.0,552.0,"M551.3,458.4L542.2,471.3L534.7,484.5L539,517L541.6,535.2L541,539.1L524.4,573.9L519.9,584.2L504.7,620.1L504.3,620.8L501.2,624.5L495.9,628.3L494.1,629.2L493.3,627.1L491.8,614.9L485.7,609.9L492.8,564.9L498.3,565.3L501.4,564.6L516.1,558.2L516.9,553.6L519.3,549.4L524.5,545.3L525.1,544.1L527.4,532.3L528.5,526L525.9,508.6L524.2,506.1L520.7,497.2L511.5,494.2L513.9,491.3L522.1,482.2L545.1,453.7Z"],["居仁里","埔墘・光復",791.9,390.5,"M805.9,404.3L798.2,401.7L770.2,402.2L772,380L788.8,379.5L806.3,377.9L810.1,377L813.7,385.6L810.5,398.5Z"],["福祿里","後埔・亞東",636.0,487.7,"M611,465.5L629.4,473.5L675.1,491L673.2,491.8L658.9,499.7L650.9,507.4L644.1,515.2L637.5,520L638,512.4L636.1,508.3L636.4,506.4L634.9,503.9L631.8,482.5L626.4,483L624.3,487.1L596.5,474.4L602.2,462L607.7,464.7Z"],["永安里","埔墘・光復",738.0,268.1,"M759.6,265.7L733.3,285.7L725.4,283.5L719.4,280.3L712,281.2L711.6,274.8L716.5,274.2L715.3,267.1L722.7,266.4L727.8,264.4L736.1,258.2L750.1,245.5L755.3,254.7L763.8,262.7Z"],["福德里","後埔・亞東",603.4,528.3,"M637.3,523.5L639.1,528.7L643,534.3L642.6,535.3L632.9,538.9L623.4,541.3L623.9,549.1L617.1,550.4L603.1,544.3L580.3,548.1L571.7,510.8L593.5,507.1L596.1,506.8L606.2,509.5L625.3,516.6L628.3,525.4Z"],["湳興里","浮洲・溪崑",458.1,484.1,"M446.7,423L458.8,465.6L463.9,479L472.8,496.9L499.2,509.6L492.8,516.3L484.5,522.8L478.4,526.2L471.7,529.3L466.8,530.6L451.3,531.2L451.1,518.2L447.9,496.1L446.4,489.2L440.4,472.7L437,454.9L435.3,428.1L433.1,413.5L443.6,412.6Z"],["民生里","埔墘・光復",708.5,389.5,"M704.4,371.7L715.2,387.3L732.1,407.3L727.1,410.9L718.5,404L685.2,381.4L703.6,371.4Z"],["松柏里","新埔・社後",736.1,190.7,"M752.8,181L762.6,201.8L755.9,205.7L759,208.2L754.4,210.1L752.5,208.8L748.5,208.4L745.3,208.6L741.8,210L737.2,204.3L737,199.8L730,199.8L723.7,206.8L704.3,191.8L709.8,186L715.6,182L727.9,175.8L746.1,168.6L750.8,176Z"],["華翠里","江翠生活圈",697.7,247.9,"M711.4,267L695.5,266.9L679.7,264.9L673.5,263.2L673.6,260.5L674.7,257.9L684.5,241.9L697.3,221.8L708.8,228.4L714.7,232.6L720.7,241.1L716.2,243.7L712.9,249.5L711.2,256.2Z"],["陽明里","新埔・社後",597.5,262.2,"M610.3,259.8L610.1,265.5L605.9,283.6L601.9,281.2L590.9,271.2L579.5,253.7L594.8,245.9L598.3,243.9L604,254L605.7,253.6L609.7,254.2Z"],["純翠里","江翠生活圈",612.2,178.9,"M638.7,175.7L633.6,183.5L614.5,198.2L619.7,209.6L609.8,214.6L606.4,206.9L587.4,163.6L621,152.7L622.3,157.6L626.2,164.3L629.1,167.7Z"],["松翠里","江翠生活圈",716.3,171.0,"M746.1,168.6L727.9,175.8L715.6,182L709.8,186L704.3,191.8L689.7,180.6L706.5,159.5L734.3,154.7Z"],["港尾里","新埔・社後",481.2,290.7,"M492.3,279.7L492.3,289.1L485.4,289.5L488.9,307.9L489.9,308.8L483.6,318L481.7,313.9L478.5,306.5L472,290.5L471.3,286.6L471.9,270.9L478.9,271.6L481.5,274.4L484.7,275.3L485,276.6L488.2,277.4L489.9,279Z"],["懷翠里","江翠生活圈",804.2,156.5,"M833.9,133.6L834.1,134.1L838.8,146.5L841.9,157.7L846.1,166.9L846.8,168.1L805.6,183L807.2,187L790.4,194.1L789.4,195.1L781,185.6L771.4,172.2L765.7,162.4L772.6,156.3L776.1,151.5L777.1,149.1L777.5,144.2L776.2,135.4L787.3,121.1Z"],["新埔里","新埔・社後",622.9,272.5,"M643.2,262L627.8,292.1L617.4,288.6L605.9,283.6L610.1,265.5L610.3,259.8L617.5,257.5L627.9,252.9L632,261.2Z"],["埔墘里","埔墘・光復",796.9,314.7,"M816.8,299.6L821.9,301.6L824.2,304.9L824.1,306.8L820.8,315.5L819.3,324.5L816.5,332.5L820.7,332.5L821.1,333.5L819.8,336.5L808.9,335.9L808.3,333.3L802.8,333.4L802.3,332.6L780.9,334.4L780.8,335.8L773.6,336.5L773.2,330.1L773.4,301.9L774.2,295.5L812.7,293.9Z"],["香丘里","新板・府中",650.0,380.3,"M685.2,381.4L670,389.8L644.3,402.5L621.9,372.8L643.3,357.1L652.3,368.1L666.8,372.5L676,376.3Z"],["華德里","後埔・亞東",410.2,672.2,"M479.3,636.6L472.5,660.2L471,663L464.9,666.2L465,673.7L465.3,678L462.7,682.9L461.4,690.7L457.2,699.6L456.6,699.6L449.3,697.9L435,687.1L422.4,680.7L418.7,673.7L416,671.8L411,676.9L407.3,679.1L396.8,682L382.5,688.4L378.4,687.2L373.4,688.3L364.3,691.5L354,696.5L350.4,699L348.2,697.4L340.8,688.4L332.3,674.3L366.2,657L393.5,662.8L417,667.1L420.7,667.1L424.7,663.1L430.5,658.8L440,653.8L478.4,636Z"],["文翠里","江翠生活圈",740.8,134.7,"M772.2,116.8L748.5,143L738,152.9L734.3,154.7L706.5,159.5L747.3,110.6Z"],["國泰里","後埔・亞東",614.8,498.4,"M637.5,520L637,520.4L637.3,523.5L628.3,525.4L625.3,516.6L606.2,509.5L596.1,506.8L593.5,507.1L589.9,482.8L593.7,482.2L596.5,474.4L624.3,487.1L626.4,483L631.8,482.5L634.9,503.9L636.4,506.4L636.1,508.3L638,512.4Z"],["玉光里","埔墘・光復",689.2,345.5,"M705.6,325.2L708,332.9L711.4,340.5L717.9,351.6L721.7,356.6L716.2,359L698.1,363L689,358.4L686.1,365.2L667.1,359.2L665.5,356.5L663.8,355.3L658.4,352.6L653.2,352L652.3,350.5L675.7,332.4L688.8,321.6L694,324.6L698.8,323.4L702.8,325.3Z"],["民安里","新板・府中",532.2,381.0,"M552.8,377.5L551.2,382.1L545,390.8L533.1,399.3L531.9,397.7L507.5,367.7L535,370.3Z"],["華興里","後埔・亞東",493.2,530.7,"M511.9,527L506.8,537.3L505,538.8L487.1,547.1L481.5,552.6L471,543.4L478.4,526.2L484.5,522.8L492.8,516.3L499.2,509.6L514.9,516.8Z"],["成和里","浮洲・溪崑",233.5,647.7,"M255.3,577.2L254.3,617.1L252.2,675.5L252.6,694.4L255,710.7L254.9,721.3L253.9,726L241.6,725.2L237,724.1L208.7,712.7L215.5,688.4L221.5,644.1L223.3,637.5L218,636.8L206.5,633.8L207.1,625.6L209.1,615.6L215.1,606.5L216.3,602.9L200,588.9L212.6,580.5L220.1,577L229,576.9L235.6,575.5L236.9,576.3L237.4,579.6L254.2,578.6Z"],["德翠里","江翠生活圈",498.1,251.0,"M524.2,266.8L518.5,284.7L502.2,276.2L492.4,269.3L474.2,254.1L474.7,234.2L477.1,224.5L479.3,221.9L489.6,226.8L501.6,220.6L505.7,228.1L508.9,226.1L511.1,230.2L505.9,233.2Z"],["光復里","埔墘・光復",856.6,323.2,"M888.3,265.5L889.3,268L888.3,271.7L886.6,287.5L886.3,289.8L884.4,298.8L884.5,301.8L884.5,302.6L884.5,313.1L885.9,322.2L885.9,322.7L886.5,337.7L886.1,349.2L886.8,357L886.9,357.7L888,369.2L888,369.2L834.1,369.7L823.7,341.5L821.1,333.5L820.7,332.5L816.5,332.5L819.3,324.5L820.8,315.5L824.1,306.8L824.2,304.9L821.9,301.6L816.8,299.6L829.5,291L888.2,265.3Z"],["香社里","新埔・社後",420.0,316.1,"M478.5,306.5L481.7,313.9L474.3,319L466.2,326.9L468.9,335.2L464,337.2L471,354.2L467.6,355.5L470.4,361.3L463.8,361.5L457.3,362.6L453.5,364.6L446.1,345.9L450.2,334.7L443.2,332.6L400.1,338.8L388.2,319.3L377.3,303.9L366.1,285.6L364.1,280.8L369.5,268.6L413.6,295.2L441.4,310L445.7,310.4L455.2,315.2L461.7,317.1L462.9,320L468.2,316.9L468.8,314.3L472.2,310.7Z"],["東丘里","新板・府中",733.6,376.0,"M747.3,397.6L732.1,407.3L715.2,387.3L704.4,371.7L742.6,351.2L749,347.4L757.1,361.2L756.2,363.7L754.7,364.5L757.6,368.8L754.9,370.6L756.7,373.2L756.2,374.5L751.2,377.8L750,380L739.5,385.2L742.4,390.7Z"],["雙玉里","埔墘・光復",759.3,299.7,"M775.4,292.2L774.2,295.5L773.4,301.9L773.2,330.1L763.7,336.9L750.1,313.9L751.9,306.1L753.8,296.2L747.8,296.4L740.8,299.2L743.3,287.2L733.3,285.7L759.6,265.7L762.4,269.2L764.9,275.7L765.6,279.3L765.7,289Z"],["文聖里","新埔・社後",770.5,191.1,"M789.4,195.1L786.1,199.1L773.3,207.7L767.5,211.5L762.6,201.8L752.8,181L771.4,172.2L781,185.6Z"],["福安里","浮洲・溪崑",307.1,650.5,"M397.3,628.1L388.4,633.9L384.7,638.1L384.3,640.5L382.8,643.2L374.7,651.3L366.2,657L332.3,674.3L331.4,674.3L328.7,676.9L323.6,683.5L311.2,684.1L309.6,678.4L305.4,683.6L303.2,706.2L297,706.5L290.5,709L282.4,716.9L277.8,720.2L270.2,724.1L260.3,726.1L253.9,726L254.9,721.3L255,710.7L252.6,694.4L252.2,675.5L254.3,617.1L335.4,592L334.3,596.2L361.8,607.3L358.9,612.9Z"],["光華里","新埔・社後",462.1,436.7,"M477.5,428.8L470.9,431.7L469.5,433.1L467.6,437.3L472.8,456.7L463.7,459.7L462,460.7L460.1,463.5L458.8,465.6L446.7,423L468.7,417.4L467.5,412.6L470.6,411.3Z"],["香雅里","新埔・社後",435.1,363.7,"M471,354.2L475.5,353.8L476.3,358.4L475.6,360.1L479.3,370.4L479.7,373.3L477.9,376.7L455.8,368.1L451.3,369.9L447.3,372.2L444.2,375.3L439.7,385.1L438.1,390.2L438.4,394.6L443.6,412.6L433.1,413.5L419.2,375.5L400.1,338.8L443.2,332.6L450.2,334.7L446.1,345.9L453.5,364.6L457.3,362.6L463.8,361.5L470.4,361.3L467.6,355.5Z"],["港嘴里","江翠生活圈",798.2,238.2,"M862.8,202.3L866,209.3L870.4,213.3L871.3,214L824.7,223.2L818.1,225L806.2,230.6L801,233.4L793.9,238.9L792.2,256.7L785.6,257L784.1,270.6L774.7,272.4L776.7,278.4L776.7,285.8L775.4,292.2L765.7,289L765.6,279.3L764.9,275.7L762.4,269.2L759.6,265.7L763.8,262.7L755.3,254.7L750.1,245.5L763.1,239.7L767.9,239.3L770.5,238.3L787.2,226.4L800.6,216.9L818.8,210.7L827.4,208.8L833.1,208.4L842.1,204.9L861.8,200Z"],["正泰里","埔墘・光復",763.0,395.4,"M772,380L770.2,402.2L769.4,412.7L760.4,412.9L755.7,408.6L747.3,397.6L758.8,388.1L764.4,382L770.4,369.5L773,366.8Z"],["光仁里","埔墘・光復",734.4,331.3,"M751.9,306.1L750.1,313.9L763.7,336.9L749,347.4L742.6,351.2L738.9,344.6L734.3,348.8L721.7,356.6L717.9,351.6L711.4,340.5L708,332.9L705.6,325.2L716.8,317L718.8,321L721.1,319.9L738,309.6L738.1,308.5L742.1,305.5L744.6,306.3Z"],["社後里","新埔・社後",494.5,367.8,"M483.6,318L485.7,323.1L495.8,346.6L497.3,350.2L501.2,359.7L507.5,367.7L531.9,397.7L495.2,420L494.4,419.6L498.5,391.3L498.9,382.4L488.7,380.9L483.3,379.7L482.7,379L480.6,377.3L477.9,376.7L479.7,373.3L479.3,370.4L475.6,360.1L476.3,358.4L475.5,353.8L471,354.2L464,337.2L468.9,335.2L466.2,326.9L474.3,319L481.7,313.9Z"],["明翠里","江翠生活圈",602.2,230.1,"M582.3,204L606.4,206.9L609.8,214.6L617.8,232.4L627.9,252.9L617.5,257.5L610.3,259.8L609.7,254.2L605.7,253.6L604,254L598.3,243.9L594.8,245.9L580.2,221L581.1,209.6L580.5,208.5L578.8,203.7Z"],["民權里","新埔・社後",537.4,365.2,"M552.8,377.5L535,370.3L507.5,367.7L508.2,364.1L518.5,357.3L535.9,359.4L538.4,358.2L548.2,357.3L551.4,356.2L554.9,356.3L557.1,358.1L557.7,360.1L557.5,367.7L558.8,369.9L558.1,373.7L554.4,375.5Z"],["長壽里","埔墘・光復",801.7,363.8,"M834.1,369.7L807.1,370L810.1,377L806.3,377.9L788.8,379.5L772,380L773,366.8L773.6,356.4L793.6,356L806.3,351.1L823.7,341.5Z"],["溪福里","浮洲・溪崑",188.0,836.5,"M172.2,742.8L184.8,752.7L193.4,740.9L212.9,752.6L228.9,757.4L271.9,779.9L271.2,785.4L265.2,795.9L261.7,804.6L246.4,816.2L242.9,819.9L240.3,824.3L235.6,837.7L235,841.8L235.2,849.8L237.8,857.7L238.3,862L232.8,888.1L229.1,898.2L224.4,905.9L217.2,911.6L211.9,917L205,921.9L201.5,925.6L195.3,930L186.7,933.8L184.2,938.1L180,941.6L172.8,945.2L163.9,952L150,949.4L140.5,943.4L138.4,940.6L139.5,936.8L140.8,925L141.2,908.3L139.1,885.6L137.3,877.2L134.8,870.3L134,861.6L131.3,853.6L130.1,850.4L129.5,844.9L134,840.8L136.9,836L138.7,827L137.8,820.1L136.1,817.1L137.9,811.5L136.9,792.2L135.4,788.7L132.7,787.1L128.6,782.7L126.2,779.1L124.7,774.6L134.8,765.6L145.4,754.2L150.6,753.8L168.4,739.6Z"],["信義里","後埔・亞東",511.7,672.1,"M507.4,659L508.9,662.8L525.9,683.2L532.5,690.5L535.9,693.2L545.4,705.1L546.6,708.3L546.4,712.3L544.6,707.8L543.3,706.9L538.4,704L531.1,699.2L513.5,698.1L505.9,694.4L504,692.3L503.7,687.2L499.6,678.1L499.9,672.5L500.1,670.9L495.6,655.3L495,649.8L495.9,628.3L501.2,624.5L504.3,620.8Z"],["新興里","新埔・社後",485.2,485.8,"M496.7,478.2L513.9,491.3L511.5,494.2L499.2,509.6L472.8,496.9L463.9,479L458.8,465.6L460.1,463.5L475.1,463.8L476.6,466.5L479.7,467.4L487.4,472.4L492.4,474.1Z"],["幸福里","新埔・社後",544.9,285.3,"M550.6,267L572.4,303.6L573.3,307.7L567.4,307L549.5,313.1L546.9,309.8L542.5,304.3L540.9,296.6L539.4,295.3L532.9,295.2L530.7,293.8L523.6,287.2L518.5,284.7L524.2,266.8L543.6,255.2Z"],["光榮里","新埔・社後",454.9,407.5,"M470.6,411.3L467.5,412.6L468.7,417.4L446.7,423L443.6,412.6L438.4,394.6L451.8,397L453.9,393.7L461.6,397.4L465,392.6Z"],["重慶里","後埔・亞東",550.2,625.4,"M587.6,603.6L590.2,603.3L596.4,619.1L601.6,619.6L597.3,626.6L592.1,637.3L592.2,639.2L594.3,642.2L586.6,633.3L575.8,644.6L572.6,636.8L551.9,641L546.7,644.1L546,636.1L537.3,637.6L536.8,652.8L507.4,659L504.3,620.8L504.7,620.1L507,620L524.3,614L543,610.2L543.4,608L545.3,607.5L545.2,604.5L551.7,601.8L551.1,598.3L558.1,597.7L580,593.9L581.9,604.9Z"],["東安里","埔墘・光復",695.2,415.1,"M714.7,418.8L712,420.6L709.9,420.1L709.2,421L709,424.7L707.3,422.9L707.3,420.7L703.4,416.8L689.9,426.2L682.9,423L678,414.6L686.4,409.5L697.5,404.1L700.2,403.8L707.3,410.4Z"],["華福里","後埔・亞東",516.7,512.4,"M527.4,532.3L511.9,527L514.9,516.8L499.2,509.6L511.5,494.2L520.7,497.2L524.2,506.1L525.9,508.6L528.5,526Z"],["大豐里","後埔・亞東",559.3,577.3,"M587.6,603.6L581.9,604.9L580,593.9L558.1,597.7L559.1,594.3L560.5,592.9L563.4,592.5L555.2,579.1L551.9,578L550.3,576.6L536.8,579.6L535.6,587.1L527.3,586.3L519.9,584.2L524.4,573.9L530.8,575.3L534.9,566.7L575.6,556.1L578.2,573.4L584.5,591.4Z"],["公舘里","新板・府中",576.4,323.5,"M573.3,307.7L580.2,309.7L598.5,323.8L600.1,321.4L605.5,325.7L592,343.9L584.3,337.7L576.8,333.4L569.7,332.3L559.2,333L556.4,331.3L554.2,328.9L553.6,324.2L552.6,321.2L551.3,319.7L551.2,317L549.5,313.1L567.4,307Z"],["廣福里","後埔・亞東",558.4,689.0,"M584.6,684.9L590.9,680.9L608.1,710.7L604.1,711.8L602.3,713.7L600.9,716.7L590.9,717.9L585.8,721.7L582.9,720.2L582.3,721.2L582.6,723.7L580.2,725.5L574.8,722.6L564.5,724.1L561.4,721.1L558.3,721.5L556.7,722.6L554.8,724.4L553.4,724.1L546.7,712.7L546.4,712.3L546.6,708.3L545.4,705.1L535.9,693.2L532.5,690.5L525.9,683.2L508.9,662.8L507.4,659L536.8,652.8L556.4,652L558,660.8L564.4,671.4L566.2,672.5L569.7,671.8L571.3,672.3L574,691.7Z"],["留侯里","新板・府中",482.0,450.0,"M490.2,446.7L476.7,450.1L478.1,455.5L486.4,453.5L487.7,458.2L489.2,457.8L489.2,455.8L496.9,455.4L495.9,468L497.8,469.7L496.7,478.2L492.4,474.1L487.4,472.4L479.7,467.4L476.6,466.5L475.1,463.8L460.1,463.5L462,460.7L463.7,459.7L472.8,456.7L467.6,437.3L469.5,433.1L470.9,431.7L477.5,428.8L483.6,424.9L485.7,427.2L491.1,425.6L494.5,434.5L490.2,436.4L492,441L489,442.1Z"],["中山里","浮洲・溪崑",404.2,579.8,"M451.3,531.2L450.2,555L446.8,569.6L440.5,587.9L426.6,606.2L415.6,616.9L397.3,628.1L358.9,612.9L361.8,607.3L334.3,596.2L335.4,592L336.9,589.4L339,580.3L351.8,585.5L355.8,580.7L376.5,589.1L385.3,567.7L391.7,548.7L423.6,529.2Z"],["崑崙里","浮洲・溪崑",194.4,658.4,"M208.7,712.7L195.1,706.5L193.3,704.7L175.4,696.9L168.3,693.1L151,681.4L156.2,673.8L163.2,678.7L164.1,677L164.1,665.4L164.7,664.1L168.7,661.5L170.2,659.6L179.3,643.3L189.7,628.9L189.7,627.1L185.9,620.3L186.7,610.6L188,604.8L194.7,594.1L200,588.9L216.3,602.9L215.1,606.5L209.1,615.6L207.1,625.6L206.5,633.8L218,636.8L223.3,637.5L221.5,644.1L215.5,688.4Z"],["港德里","新埔・社後",517.7,324.8,"M549.5,313.1L551.2,317L551.3,319.7L552.6,321.2L553.6,324.2L554.2,328.9L549.2,330.3L547.2,321.8L545,322.2L545.2,323L536,325.3L504.4,332L502.8,332.5L506.1,342.6L495.8,346.6L485.7,323.1L546.9,309.8Z"],["振義里","新埔・社後",844.5,251.0,"M871.5,214.1L874,218.1L874.3,219.1L874.6,231.8L887.6,263.7L888,264.9L888.2,265.3L829.5,291L828.6,289.5L825.6,291.5L819.4,280.9L822.9,278.8L821.3,277L815.5,271.7L809,269.5L809.4,265.8L807.4,258.1L805,255.7L803.8,246.5L807,246.3L812.8,243L806.2,230.6L818.1,225L824.7,223.2L871.3,214Z"],["九如里","新板・府中",760.7,363.5,"M773.6,336.5L773.6,356.4L773,366.8L770.4,369.5L764.4,382L758.8,388.1L747.3,397.6L742.4,390.7L739.5,385.2L750,380L751.2,377.8L756.2,374.5L756.7,373.2L754.9,370.6L757.6,368.8L754.7,364.5L756.2,363.7L757.1,361.2L749,347.4L763.7,336.9L773.2,330.1Z"],["新生里","新埔・社後",504.1,290.6,"M518.5,284.7L523.6,287.2L530.7,293.8L529,295.8L514.8,298.1L513.7,300.8L496.9,304.1L497.4,301.9L495.4,302.6L492.2,306.6L488.9,307.9L485.4,289.5L492.3,289.1L492.3,279.7L492.4,269.3L502.2,276.2Z"],["振興里","埔墘・光復",799.2,272.7,"M829.5,291L816.8,299.6L812.7,293.9L774.2,295.5L775.4,292.2L776.7,285.8L776.7,278.4L774.7,272.4L784.1,270.6L785.6,257L792.2,256.7L793.9,238.9L801,233.4L806.2,230.6L812.8,243L807,246.3L803.8,246.5L805,255.7L807.4,258.1L809.4,265.8L809,269.5L815.5,271.7L821.3,277L822.9,278.8L819.4,280.9L825.6,291.5L828.6,289.5Z"],["青翠里","江翠生活圈",767.7,138.8,"M787.3,121.1L776.2,135.4L777.5,144.2L777.1,149.1L776.1,151.5L772.6,156.3L765.7,162.4L748.5,143L772.2,116.8Z"],["仁愛里","後埔・亞東",534.0,597.5,"M558.1,597.7L551.1,598.3L551.7,601.8L545.2,604.5L545.3,607.5L543.4,608L543,610.2L524.3,614L507,620L504.7,620.1L519.9,584.2L527.3,586.3L535.6,587.1L536.8,579.6L550.3,576.6L551.9,578L555.2,579.1L563.4,592.5L560.5,592.9L559.1,594.3Z"],["浮洲里","浮洲・溪崑",405.1,447.2,"M400.1,338.8L419.2,375.5L433.1,413.5L435.3,428.1L437,454.9L440.4,472.7L446.4,489.2L447.9,496.1L451.1,518.2L451.3,531.2L423.6,529.2L383.4,526.6L357.4,525L359.2,519.8L363.1,512.4L365.1,506.2L370.2,481.2L374.1,466.4L381.6,438.7L390,425.2L394.5,408.4L395.7,394.2L394.2,375.5L390.3,354.6L380,331.1L370.1,316.7L361,307.4L356.4,304.2L352,302.9L364.1,280.8L366.1,285.6L377.3,303.9L388.2,319.3Z"],["華貴里","後埔・亞東",503.8,549.0,"M527.4,532.3L525.1,544.1L524.5,545.3L519.3,549.4L516.9,553.6L516.1,558.2L501.4,564.6L498.3,565.3L492.8,564.9L476.2,562.9L475.7,559L481.5,552.6L487.1,547.1L505,538.8L506.8,537.3L511.9,527Z"],["五權里","後埔・亞東",599.7,671.8,"M594.3,642.2L613.9,667.4L617,673.6L623.9,669.9L624.9,669.9L627.5,673.1L628.4,676.8L628.4,680.8L626.6,687.2L623.6,689.6L620.1,694.5L616,698.3L616.1,698.8L618.8,698L622.1,698.5L620.9,703L614.7,708.3L611.5,708.9L608.1,710.7L590.9,680.9L584.6,684.9L582.2,676.1L589.9,671.4L588.2,668.5L583.9,670L583.8,669.3L587.6,668.1L584.4,659L570.3,665.2L567.5,648.1L574,646.5L575.8,644.6L586.6,633.3Z"],["僑中里","浮洲・溪崑",355.9,493.1,"M374.1,466.4L370.2,481.2L365.1,506.2L363.1,512.4L359.2,519.8L357.4,525L339.9,524L349.1,462.9Z"],["嵐翠里","江翠生活圈",753.0,162.5,"M765.7,162.4L771.4,172.2L752.8,181L750.8,176L746.1,168.6L734.3,154.7L738,152.9L748.5,143Z"],["溪洲里","浮洲・溪崑",135.0,739.5,"M168.4,739.6L150.6,753.8L145.4,754.2L134.8,765.6L124.7,774.6L123.5,770.1L120.6,765.8L118.3,760.1L113.9,755.8L111.5,752.4L110.7,750L112.3,735.9L115.3,727.3L120,719.1L125.4,712.6L131.1,707.4L169.9,738.2Z"],["廣新里","埔墘・光復",723.4,306.5,"M751.9,306.1L744.6,306.3L742.1,305.5L738.1,308.5L738,309.6L721.1,319.9L718.8,321L716.8,317L705.6,325.2L702.8,325.3L698.8,323.4L694,324.6L688.8,321.6L709.3,305.2L733.3,285.7L743.3,287.2L740.8,299.2L747.8,296.4L753.8,296.2Z"],["福翠里","江翠生活圈",819.2,196.7,"M847.2,169.1L861.3,198.7L861.8,200L842.1,204.9L833.1,208.4L827.4,208.8L818.8,210.7L800.6,216.9L787.2,226.4L773.3,207.7L786.1,199.1L789.4,195.1L790.4,194.1L807.2,187L805.6,183L846.8,168.1Z"],["聚安里","浮洲・溪崑",303.2,543.2,"M339.9,524L357.4,525L344.4,561.1L317.3,563.5L303.9,565.6L256.4,569L262.8,537.6L262.9,531.9L261.2,518.4Z"],["自立里","新埔・社後",456.2,382.8,"M477.9,376.7L480.6,377.3L482.7,379L482.1,382.7L465.8,380.5L464.5,389.6L465,392.6L461.6,397.4L453.9,393.7L451.8,397L438.4,394.6L438.1,390.2L439.7,385.1L444.2,375.3L447.3,372.2L451.3,369.9L455.8,368.1Z"],["溪北里","浮洲・溪崑",163.9,711.1,"M193.3,704.7L191.5,709.8L183.1,725.4L172.2,742.8L168.4,739.6L169.9,738.2L131.1,707.4L136.3,702.4L144.6,696.7L153,689L153.3,688.5L148.5,685.1L151,681.4L168.3,693.1L175.4,696.9Z"],["堂春里","浮洲・溪崑",243.3,738.8,"M208.7,712.7L237,724.1L241.6,725.2L253.9,726L260.3,726.1L270.2,724.1L277.8,720.2L282.4,716.9L290.5,709L297,706.5L303.2,706.2L301.8,722L300.3,737.2L293.9,744.4L291.6,748.1L288.3,755.8L286.5,758.3L283.6,759.7L280.2,760.1L278.9,761.3L271.9,779.9L228.9,757.4L212.9,752.6L193.4,740.9L184.8,752.7L172.2,742.8L183.1,725.4L191.5,709.8L193.3,704.7L195.1,706.5Z"],["大安里","浮洲・溪崑",384.5,554.0,"M423.6,529.2L391.7,548.7L385.3,567.7L376.5,589.1L355.8,580.7L366.8,566.3L377,551.3L383.4,526.6Z"],["吉翠里","江翠生活圈",531.1,200.2,"M541.5,192L544.8,195.4L547.9,197.4L553.1,206.5L544.7,211.1L542.4,206.6L522.7,218.3L510.8,198.2L531,185.2L528.7,181.7L532.7,178.3Z"],["建國里","新埔・社後",526.8,350.2,"M551.4,356.2L548.2,357.3L538.4,358.2L535.9,359.4L518.5,357.3L508.2,364.1L507.5,367.7L501.2,359.7L497.3,350.2L509.5,344.5L547.6,335.6L553.2,348.4L550.8,353.5Z"],["新海里","新埔・社後",516.7,228.2,"M510.8,198.2L522.7,218.3L533,236.7L543.6,255.2L524.2,266.8L505.9,233.2L511.1,230.2L508.9,226.1L505.7,228.1L501.6,220.6L494.4,196.7L491.2,192.5L502.9,184.6Z"],["仁翠里","江翠生活圈",562.3,193.9,"M582.3,204L578.8,203.7L560.9,202L553.1,206.5L547.9,197.4L544.8,195.4L541.5,192L559.2,182.1L560.8,184.9L569.5,179.4Z"],["朝陽里","新埔・社後",549.1,216.8,"M578.8,203.7L580.5,208.5L533,236.7L522.7,218.3L542.4,206.6L544.7,211.1L553.1,206.5L560.9,202Z"],["金華里","新埔・社後",515.0,308.4,"M546.9,309.8L485.7,323.1L483.6,318L489.9,308.8L488.9,307.9L492.2,306.6L495.4,302.6L497.4,301.9L496.9,304.1L513.7,300.8L514.8,298.1L529,295.8L530.7,293.8L532.9,295.2L539.4,295.3L540.9,296.6L542.5,304.3Z"],["大觀里","浮洲・溪崑",368.6,444.9,"M390,425.2L381.6,438.7L374.1,466.4L349.1,462.9L350.5,452.9L367.2,425.2L370.6,422.2Z"],["滿翠里","江翠生活圈",586.7,187.3,"M606.4,206.9L582.3,204L569.5,179.4L567.8,176.1L580.4,170.5L581.2,169.5L581.1,165.7L587.4,163.6Z"],["復興里","浮洲・溪崑",360.7,552.4,"M383.4,526.6L377,551.3L366.8,566.3L355.8,580.7L351.8,585.5L339,580.3L344.4,561.1L357.4,525Z"],["龍安里","浮洲・溪崑",294.2,585.3,"M339,580.3L336.9,589.4L335.4,592L254.3,617.1L255.3,577.2L256.4,569L303.9,565.6L317.3,563.5L344.4,561.1Z"],["華中里","浮洲・溪崑",350.0,375.6,"M390,425.2L370.6,422.2L360,420.6L282.4,413.1L291.9,398.5L305.3,374.7L310.3,367.7L317.8,359.2L331.4,338.5L352,302.9L356.4,304.2L361,307.4L370.1,316.7L380,331.1L390.3,354.6L394.2,375.5L395.7,394.2L394.5,408.4Z"],["歡園里","浮洲・溪崑",308.2,468.2,"M370.6,422.2L367.2,425.2L350.5,452.9L349.1,462.9L339.9,524L261.2,518.4L260.5,508.6L260.5,488.8L262.5,478.6L262.6,473.8L263.9,469.5L269.6,440.6L276.2,424.8L282.4,413.1L360,420.6Z"]];
+      const YEARLY_DATA = {"100":[[1498,2644603,1765,865,430,1919,4224.0,239.3,1,1],[2555,3617389,1416,772,431,1489,3102.1,219.1,3,4],[588,665090,1131,714,398,1339,1322.4,116.9,7,7],[2297,2697419,1174,723,407,1385,2256.0,192.1,5,6],[3237,4276113,1321,830,436,1646,1822.3,137.9,4,2],[1707,1444531,846,567,358,1008,1042.8,123.2,45,56],[1210,1295927,1071,805,475,1390,951.3,88.8,10,3],[2124,2194314,1033,684,375,1284,1199.6,116.1,13,10],[1249,1122256,899,645,369,1090,887.9,98.8,26,15],[326,251104,770,541,332,910,950.0,123.3,72,84],[1317,1409676,1070,731,417,1383,1317.5,123.1,11,5],[1183,1165019,985,624,375,1146,1187.8,120.6,16,22],[1240,1303525,1051,621,360,1138,2357.0,224.2,12,24],[1274,1374202,1079,705,383,1346,1151.2,106.7,9,8],[905,738907,816,537,332,908,1028.2,125.9,52,88],[623,496926,798,558,324,939,1292.1,162.0,59,65],[1244,1172621,943,662,378,1219,939.6,99.7,19,11],[1626,1489081,916,587,342,1078,1315.4,143.6,24,42],[2324,2559998,1102,655,385,1203,1942.2,176.3,8,13],[1069,976152,913,632,344,1150,1050.7,115.1,25,18],[1124,1041621,927,646,365,1191,957.8,103.4,21,14],[251,404652,1612,658,375,1365,6075.2,376.8,2,12],[1023,1049966,1026,573,344,1059,2282.6,222.4,14,50],[1300,934174,719,553,343,908,615.2,85.6,89,72],[1515,1221699,806,597,376,1022,785.4,97.4,58,38],[1259,1266236,1006,701,392,1275,1014.2,100.8,15,9],[457,431790,945,598,338,1106,1265.1,133.9,18,36],[880,691154,785,562,357,958,788.5,100.4,63,62],[1398,1226552,877,568,352,949,1413.1,161.1,34,53],[1297,1147938,885,601,363,1108,930.4,105.1,30,34],[794,916645,1154,619,363,1187,2669.8,231.3,6,25],[2007,1682638,838,601,354,1031,792.4,94.5,46,35],[789,648810,822,558,352,1007,793.0,96.4,50,64],[1139,972680,854,595,369,1047,888.9,104.1,41,40],[1472,1353813,920,601,363,1099,1215.7,132.2,23,33],[949,845516,891,611,367,1096,895.7,100.5,27,29],[1901,1783017,938,625,369,1156,1148.2,122.4,20,21],[876,759835,867,598,373,1029,893.5,103.0,38,37],[1327,1130368,852,612,357,1068,943.6,110.8,42,28],[2600,2209678,850,632,375,1024,1094.6,128.8,44,19],[1122,961101,857,587,343,1068,833.5,97.3,40,43],[936,670485,716,548,354,883,613.0,85.6,93,78],[1183,1126789,952,604,364,1103,2832.8,297.4,17,32],[983,796725,811,565,344,968,908.6,112.1,56,58],[1606,1400315,872,592,365,1081,1064.4,122.1,36,41],[1551,1224377,789,567,357,979,759.7,96.2,62,57],[729,649104,890,608,362,1016,2057.8,231.1,29,31],[615,453778,738,543,346,898,732.1,99.2,80,82],[1088,1004474,923,616,369,1056,1801.5,195.1,22,26],[892,789678,885,552,343,941,1968.9,222.4,31,73],[1666,1283134,770,578,358,986,667.6,86.7,71,48],[1089,886764,814,581,350,996,839.5,103.1,53,45],[916,815136,890,626,355,1090,959.4,107.8,28,20],[1671,1219523,730,526,333,918,640.0,87.7,82,100],[684,555088,812,550,335,1027,766.5,94.5,54,77],[1948,1705808,876,612,368,1032,952.9,108.8,35,27],[1155,994008,861,563,348,1045,1393.2,161.9,39,61],[2135,1754187,822,611,377,1024,752.9,91.6,49,30],[1235,1019228,825,555,359,966,956.1,115.8,48,68],[1078,953420,884,633,386,1148,781.2,88.3,32,17],[1514,1153105,762,557,364,908,901.9,118.4,74,67],[644,463036,719,525,305,911,699.4,97.3,90,101],[1263,1096427,868,641,364,1122,844.4,97.3,37,16],[1642,1215777,740,575,348,967,593.3,80.1,77,49],[2014,1629803,809,622,369,1054,660.0,81.6,57,23],[974,790358,811,583,355,1026,802.5,98.9,55,44],[1256,903942,720,555,356,865,663.5,92.2,88,70],[1319,1076216,816,571,340,938,910.6,111.6,51,51],[1097,835411,762,564,315,943,702.3,92.2,73,59],[1169,968962,829,580,364,1049,835.5,100.8,47,46],[714,477351,669,525,344,825,540.0,80.8,110,104],[897,764664,852,568,350,1037,1120.6,131.4,43,54],[815,570431,700,534,324,828,642.9,91.8,99,91],[1805,1393520,772,558,351,951,695.9,90.1,67,66],[998,748216,750,541,341,904,684.9,91.3,76,85],[907,657507,725,533,333,881,731.2,100.9,84,92],[1734,1205479,695,525,327,837,662.9,95.3,103,102],[1426,1029951,722,527,323,881,672.3,93.1,86,99],[826,644315,780,547,340,907,835.9,107.2,65,79],[851,610492,717,551,336,909,604.5,84.3,92,75],[3805,3024489,795,597,362,1020,705.1,88.7,61,39],[1188,916522,771,569,344,939,740.3,96.0,70,52],[863,627147,727,555,318,896,650.6,89.5,83,69],[1108,760292,686,530,339,862,545.3,79.5,108,98],[782,564418,722,523,315,903,664.3,92.0,87,106],[2606,2024542,777,568,352,995,699.4,90.0,66,55],[713,510779,716,539,327,892,672.2,93.8,94,87],[677,539602,797,546,349,984,853.7,107.1,60,80],[1452,1050908,724,533,327,892,664.6,91.8,85,93],[1113,843342,758,554,341,962,732.1,96.6,75,71],[1255,985429,785,546,349,951,1113.2,141.8,64,81],[473,416445,880,563,304,899,2168.1,246.2,33,60],[938,570784,609,474,316,744,528.1,86.8,122,125],[2705,2086754,771,578,353,963,1439.2,186.6,69,47],[1373,1015410,740,542,346,877,683.0,92.3,78,83],[1137,836654,736,561,342,910,685.2,93.1,81,63],[812,582879,718,537,342,905,592.4,82.5,91,89],[1299,920343,709,520,344,845,637.0,89.9,97,108],[1253,896052,715,518,336,818,747.9,104.6,95,109],[785,559560,713,551,356,872,595.1,83.5,96,76],[947,731414,772,551,331,919,1037.0,134.3,68,74],[960,664034,692,513,335,820,1060.4,153.3,104,112],[776,535974,691,523,339,871,578.0,83.7,105,107],[1159,798556,689,532,340,844,616.1,89.4,106,95],[1103,679502,616,495,321,750,570.5,92.6,120,120],[647,450464,696,536,338,839,685.5,98.5,101,90],[1743,1290190,740,540,330,924,741.0,100.1,79,86],[887,595101,671,525,343,838,566.1,84.4,109,103],[414,263504,636,498,331,758,496.9,78.1,116,119],[1501,959720,639,500,329,782,568.4,88.9,115,115],[806,560142,695,530,346,868,555.8,80.0,102,97],[1009,707784,701,518,321,858,661.5,94.3,98,110],[1189,830411,698,518,335,858,600.0,85.9,100,111],[1128,754119,669,524,322,793,679.2,101.6,111,105],[1022,671378,657,508,316,809,626.6,95.4,114,113],[1040,692645,666,533,330,823,516.9,77.6,112,94],[987,611047,619,490,326,760,497.4,80.3,119,121],[815,470554,577,478,309,697,434.5,75.2,125,124],[960,660126,688,531,345,821,582.4,84.7,107,96],[1154,766701,664,504,322,809,620.3,93.4,113,114],[1026,647422,631,500,333,793,465.7,73.8,118,116],[871,552372,634,499,319,793,521.6,82.2,117,118],[231,124790,540,433,291,716,390.5,72.3,126,126],[713,413262,580,482,312,709,467.7,80.7,124,123],[1407,824989,586,485,311,734,445.1,75.9,123,122],[301,184331,612,500,345,734,447.8,73.1,121,117]],"101":[[1618,2953019,1825,880,450,1981,3813.8,209.0,1,1],[2693,3803990,1413,795,442,1543,2562.8,181.4,2,4],[598,680115,1137,717,398,1430,1381.0,121.4,7,10],[2535,2982012,1176,735,399,1427,1882.5,160.0,5,9],[3338,4494176,1346,851,461,1718,1816.8,134.9,3,3],[1777,1499547,844,578,370,1016,898.0,106.4,56,70],[1288,1468530,1140,853,494,1501,1102.6,96.7,6,2],[2273,2513892,1106,743,405,1390,1354.8,122.5,11,7],[1268,1219044,961,668,387,1211,944.0,98.2,21,17],[332,253615,764,526,331,975,771.9,101.0,86,114],[1354,1518334,1121,777,436,1487,1400.0,124.8,9,5],[1206,1274113,1056,636,368,1151,1715.9,162.4,15,28],[1258,1399689,1113,671,376,1270,3025.9,272.0,10,15],[1287,1415424,1100,747,409,1365,1124.0,102.2,12,6],[998,931507,933,581,352,1064,1116.2,119.6,25,67],[668,551160,825,564,349,971,1365.4,165.5,63,86],[1317,1256497,954,669,385,1260,891.8,93.5,22,16],[1631,1518038,931,610,369,1109,1125.6,120.9,26,40],[2393,2690176,1124,676,393,1276,2016.7,179.4,8,14],[1068,1009302,945,653,371,1203,1058.6,112.0,24,22],[1149,1140933,993,688,388,1252,1123.5,113.1,19,12],[248,313869,1266,710,402,1287,3178.6,251.2,4,11],[1032,1034208,1002,611,367,1097,1625.8,162.2,16,39],[1326,1039802,784,582,365,964,904.1,115.3,79,66],[1586,1366990,862,633,386,1068,916.2,106.3,49,30],[1292,1366867,1058,742,409,1357,1111.1,105.0,14,8],[480,454295,946,606,338,1096,1256.4,132.8,23,44],[897,730978,815,582,360,976,834.5,102.4,65,65],[1432,1262329,882,574,348,960,1355.9,153.8,41,74],[1372,1238727,903,617,371,1158,980.9,108.6,33,36],[791,868789,1098,653,373,1219,2007.0,182.7,13,21],[2136,1861569,872,629,365,1094,841.1,96.5,45,32],[819,703552,859,591,365,1024,938.4,109.2,51,54],[1190,1055817,887,617,385,1092,894.5,100.8,39,37],[1484,1349567,909,623,362,1110,1062.4,116.8,30,35],[977,864047,884,610,363,1144,827.3,93.5,40,42],[1926,1916387,995,662,384,1209,1362.5,136.9,18,18],[904,812504,899,643,386,1073,866.3,96.4,36,27],[1375,1209511,880,625,369,1092,939.4,106.8,43,34],[2657,2399864,903,647,399,1095,1299.1,143.8,32,26],[1180,1006947,853,590,345,1057,830.4,97.3,52,55],[941,685458,728,561,361,916,609.8,83.7,98,89],[1233,1213830,984,654,388,1226,2525.6,256.6,20,20],[1027,887548,864,602,381,1102,818.4,94.7,48,48],[1633,1468769,899,625,369,1151,861.9,95.8,37,33],[1645,1313351,798,593,361,1006,726.4,91.0,71,53],[743,644763,868,650,379,1049,996.8,114.9,46,25],[681,576801,847,589,357,970,956.5,112.9,54,57],[1167,1067912,915,610,376,1079,1104.7,120.7,29,41],[913,836175,916,572,370,993,2095.1,228.8,28,76],[1683,1338719,795,600,373,1008,684.5,86.0,73,49],[1134,923951,815,586,370,963,844.9,103.7,64,61],[965,963689,999,679,405,1198,1604.6,160.7,17,13],[1713,1301982,760,548,341,966,662.8,87.2,88,95],[693,610598,881,605,370,1045,988.5,112.2,42,45],[2040,1811571,888,603,367,1070,952.9,107.3,38,47],[1193,1081161,906,596,355,1070,1762.8,194.5,31,51],[2202,1908573,867,636,390,1092,777.8,89.7,47,29],[1266,1075124,849,575,360,1018,1020.0,120.1,53,72],[1145,1059457,925,651,380,1229,823.0,88.9,27,23],[1582,1273920,805,584,370,972,1182.6,146.8,68,63],[639,528913,828,571,332,961,1754.1,211.9,61,78],[1311,1180834,901,651,371,1138,897.2,99.6,34,24],[1758,1369662,779,596,374,1021,599.3,76.9,81,52],[2146,1846510,860,657,392,1127,679.8,79.0,50,19],[969,810789,837,609,361,1030,861.8,103.0,59,43],[1294,967461,748,579,367,919,702.2,93.9,93,69],[1360,1147257,844,605,358,984,907.8,107.6,55,46],[1115,878429,788,587,332,968,704.0,89.3,77,60],[1187,998053,841,615,383,1047,768.8,91.4,57,38],[748,490344,656,525,345,808,536.9,81.9,116,116],[934,816101,874,598,354,1054,1068.8,122.3,44,50],[822,589581,717,565,346,879,616.4,85.9,103,85],[1880,1487068,791,572,357,975,698.4,88.3,75,77],[1022,793937,777,570,358,927,721.0,92.8,83,80],[900,656964,730,535,325,875,757.7,103.8,97,107],[1778,1267656,713,540,339,877,641.1,89.9,104,104],[1433,1084308,757,544,340,896,752.1,99.4,89,97],[826,646522,783,567,344,958,762.1,97.4,80,82],[886,676915,764,564,350,946,675.1,88.4,85,87],[3973,3334557,839,632,381,1085,802.7,95.6,58,31],[1219,957606,786,568,357,935,732.6,93.3,78,81],[923,718427,778,588,334,985,732.3,94.1,82,59],[1168,934316,800,543,344,913,2776.9,347.1,70,99],[789,641745,813,573,364,953,1311.3,161.2,66,75],[2725,2174936,798,590,360,1001,719.5,90.1,72,56],[693,522234,754,553,365,947,619.4,82.2,90,92],[699,560578,802,571,346,1037,724.0,90.3,69,79],[1489,1120088,752,545,338,954,683.0,90.8,92,96],[1157,915063,791,575,347,1002,690.9,87.3,74,73],[1258,1021252,812,583,356,983,1010.0,124.4,67,64],[465,418647,900,585,355,971,1668.5,185.3,35,62],[981,637543,650,506,331,759,590.0,90.8,118,124],[2876,2378486,827,588,360,999,2109.4,255.1,62,58],[1433,1104724,771,566,352,918,725.6,94.1,84,83],[1197,900642,752,580,355,932,646.7,86.0,91,68],[802,670160,836,555,348,937,2759.5,330.2,60,91],[1370,988978,722,551,353,882,609.4,84.4,100,93],[1287,926071,720,551,342,862,628.6,87.4,101,94],[788,581555,738,562,356,874,650.8,88.2,95,88],[986,778092,789,577,345,961,1001.5,126.9,76,71],[986,724924,735,529,341,829,1009.1,137.3,96,113],[811,571317,704,543,347,862,585.7,83.1,107,100],[1212,873001,720,544,357,881,631.6,87.7,102,98],[1165,734338,630,507,324,801,523.7,83.1,123,123],[658,448247,681,542,337,831,587.5,86.2,114,103],[1837,1399972,762,558,343,937,786.0,103.1,87,90],[914,646023,707,566,373,849,600.8,85.0,106,84],[399,261449,655,535,342,785,529.4,80.8,117,108],[1554,1059350,682,530,343,818,712.8,104.6,113,112],[835,584313,700,543,348,871,600.8,85.8,109,101],[1024,760258,742,537,340,910,676.1,91.1,94,105],[1255,913067,728,532,350,871,665.5,91.5,99,110],[1139,792393,696,525,339,817,962.4,138.3,110,115],[1038,712031,686,533,325,854,583.9,85.1,112,109],[1078,743633,690,536,329,853,581.8,84.3,111,106],[1036,667309,644,501,336,813,508.7,79.0,120,125],[839,520478,620,510,338,746,441.9,71.2,124,121],[962,674902,702,542,350,852,581.4,82.9,108,102],[1171,828882,708,530,334,866,643.4,90.9,105,111],[1086,700077,645,516,339,804,511.5,79.3,119,119],[853,577344,677,516,337,827,590.1,87.2,115,118],[235,139573,594,466,317,738,464.3,78.2,126,126],[724,459384,635,519,343,777,489.8,77.2,122,117],[1477,943728,639,509,335,764,810.8,126.9,121,122],[316,193945,614,514,331,794,425.7,69.4,125,120]],"102":[[1703,3071581,1804,926,443,1915,3949.1,218.9,1,1],[2801,3955614,1412,784,409,1560,2525.5,178.8,2,4],[572,668641,1169,712,392,1438,1503.7,128.6,4,8],[2527,2877776,1139,711,393,1376,1808.1,158.8,7,9],[3353,4351172,1298,824,442,1670,1638.2,126.2,3,3],[1747,1463157,838,584,363,1011,886.4,105.8,52,57],[1299,1503324,1157,871,482,1546,1124.2,97.1,5,2],[2346,2581270,1100,730,391,1362,1321.5,120.1,8,6],[1397,1373191,983,676,378,1213,1001.4,101.9,18,13],[325,239814,738,518,303,965,689.1,93.4,90,112],[1341,1461527,1090,773,412,1444,1501.0,137.7,9,5],[1196,1296277,1084,631,369,1184,2352.8,217.1,10,28],[1280,1460208,1141,644,377,1191,4262.0,373.6,6,19],[1261,1346454,1068,724,395,1339,1122.9,105.2,12,7],[991,961643,970,586,358,1110,1396.9,144.0,19,51],[636,566141,890,566,358,958,2375.1,266.8,33,70],[1321,1254432,950,652,380,1283,907.5,95.6,21,15],[1595,1488102,933,585,357,1083,1186.5,127.2,25,53],[2364,2434319,1030,644,370,1244,1307.6,127.0,15,20],[1087,1014888,934,641,366,1179,1040.9,111.5,24,22],[1161,1111342,957,680,373,1258,953.6,99.6,20,12],[252,268879,1067,699,360,1247,1784.6,167.3,13,10],[1056,1101832,1043,606,353,1119,2124.8,203.6,14,40],[1284,944420,736,550,354,961,618.7,84.1,93,90],[1557,1297495,833,618,368,1060,787.3,94.5,55,33],[1285,1284099,999,690,389,1327,950.4,95.1,17,11],[455,459097,1009,631,346,1148,2355.0,233.4,16,29],[885,720229,814,581,358,997,863.1,106.0,62,62],[1402,1242450,886,570,343,974,1409.2,159.0,36,68],[1364,1188510,871,614,370,1149,833.9,95.7,42,35],[780,838305,1075,647,372,1200,1896.0,176.4,11,16],[2114,1860262,880,623,362,1109,981.5,111.5,38,32],[788,669564,850,580,369,1022,1028.5,121.0,49,63],[1191,1044829,877,612,376,1076,876.5,99.9,40,37],[1464,1361088,930,612,379,1119,1130.5,121.6,26,36],[948,821019,866,585,350,1099,824.0,95.1,47,55],[1910,1790993,938,644,384,1180,1221.3,130.2,23,21],[894,813562,910,641,387,1141,892.2,98.0,29,23],[1345,1166772,867,632,365,1092,969.0,111.7,44,27],[2581,2307322,894,645,383,1097,1098.8,122.9,31,17],[1195,1027008,859,596,340,1058,872.2,101.5,48,44],[929,671025,722,524,344,889,619.9,85.8,95,110],[1182,1058097,895,630,367,1211,882.4,98.6,30,30],[1037,869112,838,582,376,1059,803.5,95.9,53,61],[1594,1412320,886,627,375,1101,970.5,109.5,35,31],[1632,1316204,806,594,354,1010,758.1,94.0,64,46],[735,597550,813,590,365,980,775.6,95.4,63,47],[676,556986,824,557,342,950,1002.0,121.6,57,81],[1150,1011013,879,575,360,1060,886.2,100.8,39,65],[888,731920,824,550,345,927,1097.3,133.1,58,88],[1650,1318509,799,611,360,1011,714.5,89.4,66,39],[1063,889690,837,599,353,989,867.5,103.6,54,43],[983,929631,946,637,364,1202,1011.8,107.0,22,26],[1676,1234760,737,534,328,941,641.7,87.1,91,102],[667,565073,847,570,328,1012,1021.4,120.6,50,69],[2005,1737309,866,601,360,1060,925.8,106.8,46,41],[1181,1026286,869,565,334,1023,1869.5,215.1,43,72],[2211,1949374,882,657,397,1086,897.9,101.8,37,14],[1260,1000855,794,557,344,956,914.1,115.1,68,82],[1149,1051940,916,640,365,1170,1024.8,111.9,27,24],[1570,1226149,781,586,367,956,740.2,94.8,77,52],[636,500008,786,560,308,1002,761.8,96.9,74,79],[1284,1137331,886,645,368,1147,800.5,90.4,34,18],[1822,1466243,805,616,366,1029,931.0,115.7,65,34],[2189,1905532,871,640,380,1132,798.4,91.7,41,25],[984,805905,819,584,365,1013,814.6,99.5,60,58],[1269,942609,743,562,359,911,668.8,90.0,88,76],[1346,1138819,846,582,334,1001,951.9,112.5,51,60],[1064,839825,789,589,355,1005,694.5,88.0,71,50],[1177,966085,821,600,365,1035,746.4,90.9,59,42],[735,481021,654,506,321,813,619.0,94.6,116,119],[918,795796,867,585,329,1043,1166.9,134.6,45,54],[811,569097,702,553,348,847,578.7,82.5,103,85],[1844,1460179,792,560,348,990,746.2,94.2,70,78],[981,747126,762,580,351,928,683.3,89.7,80,64],[857,614537,717,543,331,911,672.9,93.8,98,93],[1702,1220534,717,542,328,882,657.4,91.7,99,95],[1379,1031186,748,550,332,911,715.1,95.6,87,89],[803,633377,789,573,351,956,761.7,96.6,72,67],[888,653292,736,552,342,941,626.8,85.2,92,86],[3978,3279457,824,612,374,1064,707.0,85.8,56,38],[1225,947769,774,553,339,926,798.4,103.2,79,84],[903,715533,792,595,340,994,787.0,99.3,69,45],[1165,820086,704,532,335,891,612.1,87.0,102,104],[784,591166,754,562,348,932,655.2,86.9,81,75],[2689,2102905,782,585,346,991,721.0,92.2,76,56],[701,505545,721,545,348,914,590.7,81.9,96,92],[678,532085,785,559,333,1006,731.0,93.2,75,80],[1427,1074898,753,556,343,957,630.9,83.8,83,83],[1124,891922,794,565,346,986,817.4,103.0,67,73],[1211,936866,774,584,343,961,853.9,110.4,78,59],[457,417509,914,589,363,961,1881.0,205.9,28,48],[952,604063,635,494,313,749,582.0,91.7,118,124],[2821,2513086,891,589,356,994,4356.1,489.0,32,49],[1374,1030691,750,551,339,881,753.1,100.4,84,87],[1146,863169,753,574,360,943,659.3,87.5,82,66],[781,585356,749,540,336,945,896.4,119.6,86,96],[1322,948313,717,562,349,887,598.0,83.4,97,77],[1318,941331,714,526,330,874,668.4,93.6,101,107],[805,584192,726,540,337,860,671.8,92.6,94,97],[997,784726,787,562,342,913,1154.5,146.7,73,74],[987,668726,678,498,321,828,691.4,102.0,110,123],[801,541954,677,543,333,851,537.4,79.4,111,94],[1178,844519,717,528,336,878,665.1,92.8,100,106],[1139,716979,629,516,330,764,545.5,86.7,122,113],[638,446731,700,525,327,799,1004.0,143.4,104,108],[1797,1346842,749,545,339,910,795.0,106.1,85,91],[889,612276,689,566,343,863,533.4,77.5,106,71],[397,257416,648,513,337,772,530.6,81.8,117,115],[1515,1025894,677,536,348,836,575.0,84.9,112,99],[830,567638,684,531,344,847,563.4,82.4,109,105],[1017,751506,739,533,325,889,723.3,97.9,89,103],[1226,1001054,817,534,338,882,2790.2,341.7,61,101],[1150,777845,676,523,329,811,641.1,94.8,113,111],[1001,667875,667,499,318,859,574.1,86.0,115,122],[1042,720165,691,525,335,871,573.9,83.0,105,109],[992,625673,631,501,327,785,514.6,81.6,121,120],[822,520608,633,513,324,800,493.5,77.9,120,116],[962,658069,684,540,340,830,586.6,85.8,108,98],[1164,797893,685,512,328,858,634.5,92.6,107,117],[1092,670369,614,501,331,793,439.8,71.6,123,121],[807,542992,673,536,329,835,569.1,84.6,114,100],[229,136709,597,473,322,743,484.5,81.2,126,126],[723,442378,612,508,327,746,470.4,76.9,124,118],[1470,899902,612,494,336,747,500.7,81.8,125,125],[349,221186,634,515,325,767,485.7,76.6,119,114]],"103":[[1731,3539981,2045,970,447,2042,5947.8,290.8,1,1],[2922,4379786,1499,823,439,1638,2781.7,185.6,2,4],[595,682637,1147,691,381,1454,1441.9,125.7,10,11],[2607,3104812,1191,754,402,1440,2073.8,174.1,8,7],[3402,4877016,1434,873,458,1769,2329.3,162.5,3,3],[1753,1532259,874,592,373,1060,1049.9,120.1,55,67],[1316,1576855,1198,919,481,1600,1125.4,93.9,7,2],[2360,2807973,1190,759,396,1469,1633.5,137.3,9,6],[1410,1472625,1044,695,384,1293,1154.4,110.5,19,10],[323,254345,787,554,321,1026,732.8,93.1,83,102],[1328,1508820,1136,816,430,1492,1281.1,112.8,12,5],[1231,1341643,1090,661,395,1218,1632.0,149.7,15,23],[1286,1628219,1266,679,396,1309,5996.4,473.6,4,13],[1263,1519778,1203,737,381,1391,1839.7,152.9,6,8],[994,972944,979,601,359,1129,1374.7,140.4,26,58],[631,532862,844,598,364,1067,842.5,99.8,62,61],[1317,1328190,1008,668,389,1345,1262.1,125.1,22,21],[1592,1563756,982,629,376,1167,1285.9,130.9,25,39],[2354,2573059,1093,679,399,1319,1454.8,133.1,13,14],[1103,1074522,974,674,375,1199,1264.7,129.8,28,17],[1172,1161546,991,690,406,1230,1036.7,104.6,23,12],[240,294147,1226,672,377,1309,3963.9,323.4,5,20],[1092,1166755,1068,629,350,1087,2103.2,196.8,16,37],[1261,958291,760,563,360,970,693.6,91.3,93,91],[1575,1386239,880,621,377,1081,930.9,105.8,54,42],[1253,1319538,1053,730,409,1352,1049.4,99.7,17,9],[465,449248,966,660,340,1233,1153.2,119.4,30,24],[916,743665,812,573,355,989,770.6,94.9,74,79],[1403,1338036,954,586,355,1008,1863.8,195.4,31,73],[1385,1277211,922,640,382,1173,1033.9,112.1,42,33],[757,827510,1093,647,374,1258,1804.0,165.0,14,28],[2142,2017317,942,647,376,1152,1258.8,133.7,35,29],[777,674730,868,608,373,1037,945.0,108.8,56,49],[1218,1143366,939,632,389,1140,1026.0,109.3,37,36],[1420,1489008,1049,633,379,1154,2112.0,201.4,18,35],[961,893345,930,617,368,1165,946.4,101.8,39,45],[1908,1864123,977,674,390,1190,1393.0,142.6,27,16],[912,868771,953,640,394,1168,1007.5,105.8,32,32],[1348,1220326,905,635,359,1142,959.3,106.0,47,34],[2556,2409961,943,665,396,1159,1256.1,133.2,34,22],[1200,1141185,951,602,351,1100,1804.6,189.8,33,54],[1021,815776,799,587,350,1004,704.7,88.2,79,72],[1209,1102142,912,673,378,1212,895.9,98.3,44,19],[1039,914960,881,599,370,1104,977.2,111.0,53,59],[1604,1509849,941,641,377,1146,1417.9,150.6,36,31],[1667,1380028,828,603,359,1025,789.1,95.3,67,53],[718,660776,920,657,383,1077,1021.4,111.0,43,26],[682,588647,863,595,343,1046,946.7,109.7,59,65],[1156,1050155,908,623,371,1149,911.6,100.3,45,41],[888,741446,835,584,361,975,897.8,107.5,64,75],[1667,1371687,823,602,350,1046,795.0,96.6,70,56],[1033,879619,852,595,367,1041,844.4,99.2,61,66],[975,986139,1011,642,389,1261,1515.6,149.8,21,30],[1682,1301708,774,543,353,967,699.9,90.4,89,107],[669,687270,1027,595,352,1091,3253.0,316.6,20,63],[1994,1846035,926,618,363,1111,1532.5,165.5,41,44],[1178,1045293,887,597,355,1038,1928.9,217.4,50,62],[2261,2118326,937,679,413,1135,928.6,99.1,38,15],[1276,1107131,868,588,361,992,1278.6,147.4,57,70],[1114,1076412,966,674,390,1281,928.2,96.1,29,18],[1547,1276453,825,599,372,968,950.4,115.2,68,60],[682,542986,796,572,321,983,762.1,95.7,81,82],[1312,1187815,905,658,378,1173,815.4,90.1,46,25],[1903,1558060,819,611,373,1054,688.8,84.1,71,46],[2253,2018634,896,648,394,1165,793.7,88.6,49,27],[965,956122,991,629,383,1082,3078.4,310.7,24,38],[1262,973521,771,589,364,949,695.3,90.1,90,69],[1321,1169546,885,610,373,1069,910.3,102.8,51,47],[1061,890979,840,603,350,1073,769.6,91.7,63,52],[1174,1033860,881,607,380,1089,893.0,101.4,52,50],[767,509663,664,513,336,841,556.8,83.8,119,123],[928,833839,899,602,335,1055,1292.9,143.9,48,55],[801,605688,756,559,365,918,680.3,90.0,94,93],[1845,1520513,824,583,361,1037,762.4,92.5,69,78],[988,771506,781,584,358,996,677.0,86.7,87,77],[884,639265,723,550,320,893,672.3,93.0,107,103],[1761,1308189,743,555,341,933,652.2,87.8,98,101],[1385,1067470,771,558,330,936,749.2,97.2,91,94],[806,669450,831,568,342,1033,855.8,103.0,66,87],[864,648573,751,556,351,978,617.4,82.2,95,99],[4092,3540499,865,625,373,1124,988.2,114.2,58,40],[1213,955595,788,573,346,937,837.7,106.3,82,80],[928,757639,816,621,358,1009,819.4,100.4,73,43],[1134,825472,728,558,361,881,611.7,84.0,104,96],[794,642319,809,584,352,996,742.9,91.8,75,76],[2703,2213894,819,602,364,1050,787.7,96.2,72,57],[712,533093,749,558,343,943,641.0,85.6,96,95],[665,552337,831,588,342,1107,784.6,94.5,65,71],[1418,1137843,802,566,352,997,870.2,108.4,78,90],[1158,924803,799,571,340,979,768.3,96.2,80,85],[1213,1037746,856,606,364,1025,1244.7,145.5,60,51],[446,414379,929,595,372,1055,1557.5,167.6,40,64],[951,633349,666,506,337,801,732.2,110.0,117,125],[2881,3304326,1147,609,367,1043,17180.7,1498.0,11,48],[1385,1075001,776,567,346,929,758.6,97.7,88,89],[1133,914849,807,590,365,1017,808.5,100.1,77,68],[787,635678,808,571,353,968,927.7,114.8,76,84],[1359,1003748,739,572,365,919,601.1,81.4,101,83],[1317,1001876,761,537,342,931,746.7,98.2,92,110],[833,606396,728,544,349,877,666.5,91.5,105,106],[1013,792857,783,568,343,1000,828.5,105.9,85,88],[990,697250,704,518,323,861,729.1,103.5,113,120],[786,566494,721,557,346,892,574.9,79.8,108,98],[1177,878901,747,555,365,900,661.0,88.5,97,100],[1135,737599,650,526,334,804,570.9,87.8,123,117],[645,478232,741,532,349,865,871.6,117.6,100,115],[1797,1411573,786,573,363,929,961.7,122.4,84,81],[888,639779,720,569,363,895,598.9,83.1,110,86],[364,243413,669,508,348,807,575.1,86.0,116,124],[1511,1073989,711,549,350,876,616.6,86.8,112,104],[809,582558,720,586,365,901,596.3,82.8,109,74],[1044,817065,783,547,345,984,838.0,107.1,86,105],[1243,920856,741,557,348,890,686.2,92.6,99,97],[1130,831196,736,543,368,854,965.7,131.3,102,108],[1010,701781,695,531,321,875,632.7,91.1,114,116],[1025,748822,731,561,356,914,610.2,83.5,103,92],[1022,663265,649,522,346,827,522.2,80.5,124,119],[800,523631,655,514,326,840,495.8,75.8,122,122],[953,679633,713,540,350,859,613.6,86.0,111,109],[1156,836648,724,536,361,869,682.8,94.3,106,111],[1091,724511,664,536,349,816,565.9,85.2,118,112],[804,543749,676,518,325,847,580.6,85.8,115,121],[230,151797,660,533,336,776,614.5,93.1,120,114],[716,451292,630,524,336,789,490.9,77.9,125,118],[1494,939501,629,504,335,787,480.1,76.3,126,126],[357,234102,656,534,345,790,524.5,80.0,121,113]],"104":[[1730,3113231,1800,930,451,1973,3542.0,196.8,1,2],[2909,4421029,1520,831,437,1655,2951.1,194.2,2,5],[607,702951,1158,703,396,1506,1313.6,113.4,10,13],[2561,3060598,1195,769,432,1467,1557.3,130.3,7,7],[3416,4918464,1440,879,469,1800,2234.8,155.2,3,3],[1732,1536291,887,612,376,1073,1038.6,117.1,53,56],[1300,1597260,1229,939,495,1644,1102.2,89.7,5,1],[2397,2898532,1209,776,409,1514,1523.6,126.0,6,6],[1453,1601082,1102,742,399,1394,1509.0,136.9,14,10],[322,256995,798,569,330,996,751.0,94.1,86,96],[1336,1550262,1160,841,449,1532,1270.1,109.5,9,4],[1249,1362004,1090,680,393,1277,1511.3,138.6,15,20],[1276,1727344,1354,699,390,1309,6701.2,495.0,4,14],[1284,1476595,1150,742,397,1390,1289.3,112.1,11,9],[1035,1058609,1023,624,373,1187,1277.6,124.9,20,49],[636,538379,847,592,385,1060,821.7,97.1,68,81],[1323,1390229,1051,689,402,1335,1504.2,143.1,18,17],[1604,1623235,1012,647,383,1218,1343.3,132.7,21,35],[2376,2620085,1103,681,402,1320,1449.9,131.5,13,19],[1096,1053435,961,658,375,1181,1075.6,111.9,29,31],[1154,1182768,1025,732,422,1282,1032.2,100.7,19,12],[245,292270,1193,752,387,1395,1996.0,167.3,8,8],[1092,1224799,1122,623,380,1146,2508.2,223.6,12,50],[1278,1015255,794,583,366,1007,969.8,122.1,89,87],[1569,1351587,861,627,376,1083,861.9,100.0,60,45],[1259,1341420,1065,734,414,1382,1080.2,101.4,16,11],[449,442567,986,648,331,1192,1333.9,135.3,22,34],[898,719086,801,605,375,1011,673.8,84.2,85,68],[1381,1285839,931,600,356,1063,1524.8,163.8,41,73],[1402,1365477,974,675,397,1261,975.1,100.1,26,22],[761,808742,1063,670,401,1258,1345.0,126.6,17,23],[2132,2043340,958,665,388,1187,1123.0,117.2,30,26],[793,705991,890,623,393,1040,893.0,100.3,51,51],[1209,1171052,969,667,410,1184,997.7,103.0,27,25],[1453,1419219,977,646,385,1179,1203.4,123.2,24,36],[962,895610,931,640,379,1176,884.8,95.0,40,38],[1902,1832072,963,659,396,1179,1396.8,145.0,28,30],[889,840464,945,678,404,1219,867.0,91.7,33,21],[1334,1256973,942,638,380,1151,1070.2,113.6,35,39],[2556,2418091,946,669,403,1167,983.6,104.0,32,24],[1212,1109198,915,608,356,1136,1024.6,112.0,43,59],[1026,854226,833,604,378,1042,766.2,92.0,73,69],[1188,1120348,943,690,388,1218,881.0,93.4,34,16],[1028,928156,903,614,371,1163,877.1,97.1,48,54],[1570,1477228,941,655,382,1173,1018.6,108.3,36,32],[1625,1387405,854,631,370,1084,802.0,93.9,65,43],[708,641786,906,637,379,1066,907.5,100.1,47,41],[698,597792,856,591,361,1102,836.4,97.7,64,83],[1141,1066374,935,625,402,1182,907.3,97.1,38,48],[877,762375,869,594,360,986,1140.0,131.1,55,78],[1644,1382375,841,608,369,1083,799.4,95.1,70,61],[1031,894061,867,607,374,1036,832.5,96.0,57,64],[963,940094,976,663,408,1256,1031.9,105.7,25,27],[1711,1363415,797,561,358,1001,717.2,90.0,87,104],[673,618021,918,610,383,1080,1106.0,120.4,42,57],[2016,1795978,891,616,367,1101,969.6,108.8,50,52],[1174,1067950,910,605,368,1071,1891.3,207.9,44,66],[2277,2140248,940,684,410,1172,882.0,93.8,37,18],[1267,1084643,856,614,373,1020,995.3,116.3,63,55],[1119,1096749,980,699,393,1311,940.8,96.0,23,15],[1565,1336258,854,616,383,1040,951.2,111.4,66,53],[660,550438,834,596,352,1053,824.8,98.9,72,76],[1311,1189034,907,660,377,1180,816.7,90.0,45,29],[1882,1573421,836,634,381,1118,678.4,81.1,71,42],[2231,1981596,888,655,393,1177,749.7,84.4,52,33],[998,929686,932,661,403,1144,1009.1,108.3,39,28],[1220,962825,789,607,376,963,726.8,92.1,90,65],[1343,1196428,891,638,377,1074,878.7,98.6,49,40],[1081,922264,853,627,353,1078,795.6,93.2,67,47],[1181,1025566,868,608,387,1049,827.8,95.3,56,60],[745,500374,672,527,348,844,525.4,78.2,119,121],[927,840597,907,607,347,1076,1367.5,150.8,46,63],[802,615456,767,595,381,945,655.7,85.5,97,77],[1849,1537760,832,594,368,1036,782.5,94.1,74,79],[982,808950,824,603,383,1010,739.1,89.7,77,70],[886,663103,748,549,323,946,731.5,97.7,104,111],[1810,1400737,774,577,348,970,720.2,93.1,94,92],[1395,1100216,789,578,350,969,729.3,92.5,91,90],[808,693626,858,602,357,1060,894.9,104.2,61,71],[870,672326,773,578,359,989,650.9,84.2,95,91],[4132,3569505,864,642,385,1123,782.4,90.6,58,37],[1196,993344,831,605,356,1005,864.9,104.1,75,67],[920,752378,818,601,367,1036,749.9,91.7,78,72],[1117,842998,755,568,363,912,738.7,97.9,101,98],[775,626989,809,582,362,984,760.8,94.0,82,88],[2717,2214525,815,608,362,1042,717.2,88.0,80,62],[719,562287,782,572,348,988,659.8,84.4,93,95],[679,573659,845,592,345,1070,770.6,91.2,69,82],[1420,1159578,817,597,367,1016,744.6,91.2,79,74],[1133,919175,811,597,358,1023,781.7,96.3,81,75],[1203,1030223,856,627,378,1050,933.5,109.0,62,46],[458,433561,947,609,367,1035,2172.9,229.5,31,58],[1039,708510,682,538,351,836,535.9,78.6,117,114],[2880,2488735,864,627,374,1050,2519.4,291.6,59,44],[1381,1099127,796,566,354,956,757.6,95.2,88,100],[1130,906271,802,594,368,1001,753.5,94.0,84,80],[784,689863,880,573,355,1026,2357.6,267.9,54,94],[1343,998648,744,586,371,914,612.5,82.4,106,86],[1279,967154,756,555,351,923,712.7,94.3,100,108],[833,624396,750,566,362,877,751.8,100.3,103,101],[982,792120,807,580,356,1036,996.9,123.6,83,89],[1000,828859,829,541,348,855,3896.7,470.1,76,113],[774,580318,750,588,357,926,604.9,80.7,102,85],[1149,876468,763,568,380,940,664.7,87.1,98,97],[1139,758350,666,535,362,813,562.4,84.5,120,116],[656,495845,756,560,365,871,833.5,110.3,99,105],[1788,1397537,782,590,367,970,705.7,90.3,92,84],[911,677371,744,577,374,945,636.6,85.6,107,93],[365,250136,685,506,353,792,603.8,88.1,115,126],[1457,1084929,745,564,366,921,625.7,84.0,105,102],[812,582631,718,567,365,904,557.1,77.6,113,99],[1035,796673,770,552,349,968,686.4,89.2,96,109],[1248,913775,732,560,356,904,612.8,83.7,110,106],[1131,826801,731,556,365,875,680.6,93.1,111,107],[1011,688920,681,525,331,867,571.6,83.9,118,124],[1038,768770,741,564,359,926,625.8,84.5,108,103],[1021,662700,649,527,341,802,516.3,79.5,123,122],[795,526184,662,529,326,842,522.7,79.0,122,120],[933,685880,735,551,368,870,635.4,86.4,109,110],[1146,830203,724,546,352,885,671.6,92.7,112,112],[1074,734418,684,532,361,858,602.0,88.0,116,119],[807,564870,700,534,348,836,645.2,92.2,114,117],[230,146831,638,523,341,778,589.7,92.4,126,125],[718,459178,640,538,357,807,453.5,70.9,125,115],[1475,955377,648,527,356,805,489.1,75.5,124,123],[352,233779,664,533,348,842,495.8,74.7,121,118]],"105":[[1764,3181703,1804,915,441,2014,4060.4,225.1,1,2],[2959,4433806,1498,832,444,1613,3029.7,202.2,2,4],[619,752318,1215,726,404,1489,1539.8,126.7,7,12],[2534,3163599,1248,805,446,1529,1630.3,130.6,5,5],[3484,4958544,1423,875,456,1787,2241.1,157.5,3,3],[1770,1574975,890,615,390,1079,995.4,111.9,53,60],[1284,1586307,1235,949,501,1696,1060.3,85.8,6,1],[2430,2939695,1210,755,411,1503,1476.4,122.0,8,7],[1471,1653572,1124,736,410,1377,1525.7,135.7,11,8],[322,264019,820,572,350,1040,782.4,95.4,82,100],[1347,1549806,1151,785,451,1512,1266.1,110.0,9,6],[1278,1319096,1032,670,390,1200,1260.1,122.1,19,24],[1269,1768818,1394,693,390,1288,8360.8,599.8,4,14],[1258,1440672,1145,714,422,1413,1266.2,110.6,10,13],[1075,1141606,1062,646,385,1190,1362.9,128.3,18,40],[641,553739,864,608,361,1069,936.6,108.4,62,67],[1337,1422570,1064,665,386,1300,1815.4,170.6,17,29],[1662,1693511,1019,649,374,1230,1330.6,130.6,20,38],[2345,2592653,1106,686,408,1331,1511.8,136.7,12,17],[1125,1047396,931,640,370,1188,960.4,103.2,39,42],[1153,1159607,1006,729,417,1284,965.4,96.0,21,10],[241,261232,1084,728,418,1252,1549.9,143.0,15,11],[1092,1194005,1093,653,393,1190,1993.7,182.3,14,36],[1250,993953,795,599,379,1033,688.3,86.6,89,77],[1563,1334014,853,632,371,1094,865.0,101.3,67,46],[1242,1321457,1064,731,407,1418,1060.0,99.6,16,9],[471,430391,914,587,354,1107,1050.3,114.9,45,87],[897,751542,838,614,393,1072,714.0,85.2,74,64],[1387,1296964,935,599,362,1061,1568.3,167.7,38,76],[1414,1389662,983,689,401,1252,987.7,100.5,25,15],[775,854742,1103,684,393,1242,1534.2,139.1,13,18],[2112,2119373,1003,674,389,1202,2254.1,224.6,22,22],[790,698911,885,619,375,1058,891.3,100.8,54,55],[1238,1221248,986,671,392,1175,1096.5,111.2,23,23],[1455,1428859,982,652,381,1215,1242.1,126.5,26,37],[981,899093,917,632,382,1162,858.4,93.7,43,45],[1912,1822084,953,655,379,1185,1269.5,133.2,32,35],[900,880850,979,668,375,1223,993.9,101.5,27,27],[1315,1267901,964,665,403,1192,1071.1,111.1,29,30],[2565,2405506,938,670,401,1180,944.2,100.7,37,25],[1229,1161270,945,614,378,1184,1116.2,118.1,35,62],[1044,892377,855,589,384,1049,819.4,95.9,66,86],[1212,1124261,928,660,404,1211,801.4,86.4,41,32],[1027,920962,897,637,383,1135,861.2,96.0,51,43],[1581,1467306,928,667,385,1213,898.4,96.8,40,28],[1639,1411346,861,630,379,1067,806.2,93.6,63,49],[716,671834,938,675,398,1060,942.9,100.5,36,21],[690,610282,884,615,374,1119,838.4,94.8,55,61],[1147,1087054,948,631,393,1159,1056.7,111.5,34,47],[871,792908,910,602,367,990,1199.4,131.8,48,73],[1682,1423680,846,606,375,1070,839.3,99.2,71,70],[1032,896661,869,605,372,1038,826.8,95.2,59,71],[977,961028,984,675,400,1264,1104.7,112.3,24,20],[1729,1393747,806,574,377,998,731.9,90.8,85,96],[663,605681,914,611,369,1102,999.3,109.4,44,66],[2023,1844065,912,626,371,1117,1178.7,129.3,47,50],[1184,1073690,907,593,361,1055,1974.4,217.7,49,81],[2256,2151672,954,689,425,1198,906.0,95.0,31,16],[1283,1107927,864,614,372,1006,1061.2,122.9,61,63],[1123,1097102,977,679,379,1286,972.0,99.5,28,19],[1555,1331697,856,618,389,1056,909.5,106.2,65,56],[666,567127,852,622,375,1055,823.8,96.7,68,54],[1302,1188361,913,660,388,1203,793.9,87.0,46,33],[1904,1631392,857,661,392,1130,685.7,80.0,64,31],[2280,2050632,899,660,387,1188,772.9,85.9,50,34],[999,961088,962,669,412,1138,1129.9,117.5,30,26],[1274,998953,784,586,377,961,731.8,93.3,93,88],[1321,1212386,918,643,388,1087,939.3,102.3,42,41],[1085,936998,864,624,364,1093,791.2,91.6,60,52],[1202,1049967,874,616,381,1069,947.1,108.4,57,59],[730,493474,676,531,341,851,554.2,82.0,120,122],[938,838576,894,630,361,1111,1114.7,124.7,52,48],[785,591616,754,590,366,945,632.8,84.0,102,85],[1857,1581701,852,607,362,1029,834.8,98.0,69,68],[970,799701,824,591,375,1029,747.6,90.7,80,84],[906,693708,766,567,329,954,769.7,100.5,96,103],[1851,1467160,793,574,360,949,1032.1,130.2,91,97],[1402,1103704,787,571,359,982,726.0,92.2,92,102],[822,716640,872,612,352,1042,969.6,111.2,58,65],[891,708898,796,607,378,1004,675.1,84.9,87,69],[4176,3667182,878,648,393,1128,868.5,98.9,56,39],[1254,1040340,830,603,357,1021,876.3,105.6,78,72],[925,764045,826,625,380,1057,815.2,98.7,79,51],[1122,826370,737,562,363,942,589.0,80.0,109,106],[765,624835,817,593,360,1020,751.4,92.0,84,82],[2659,2226418,837,623,377,1066,726.6,86.8,75,53],[693,567754,819,596,378,1034,701.4,85.6,83,80],[683,569075,833,578,358,1045,776.5,93.2,77,93],[1425,1206990,847,600,379,1045,808.4,95.4,70,75],[1150,959341,834,601,362,1029,844.9,101.3,76,74],[1205,1016965,844,618,380,1020,889.2,105.4,72,57],[459,435563,949,616,352,1079,2308.8,243.3,33,58],[1083,760691,702,546,369,862,597.9,85.1,116,114],[2893,2434081,841,634,384,1049,1059.0,125.9,73,44],[1366,1084441,794,579,361,988,733.3,92.4,90,92],[1134,902913,796,597,364,1001,738.3,92.7,88,79],[795,654818,824,557,358,985,1086.5,131.9,81,110],[1339,1007445,752,581,381,922,626.6,83.3,103,91],[1331,1011983,760,561,356,921,746.3,98.2,99,107],[810,618216,763,575,379,891,751.2,98.4,98,94],[962,772842,803,598,369,1013,993.4,123.7,86,78],[1010,767414,760,540,348,865,1278.1,168.2,100,119],[770,590791,767,593,376,954,608.7,79.3,95,83],[1158,875037,756,575,371,935,680.0,90.0,101,95],[1178,818062,694,543,350,845,617.5,88.9,118,118],[669,494274,739,562,355,878,786.4,106.4,108,105],[1818,1414225,778,584,363,945,705.2,90.7,94,90],[915,681754,745,572,371,929,639.5,85.8,107,101],[366,253628,693,544,353,823,590.4,85.2,119,117],[1425,1064359,747,585,370,928,635.2,85.0,105,89],[804,591049,735,567,367,965,586.5,79.8,110,104],[1059,810687,766,545,352,958,684.9,89.5,97,115],[1262,943686,748,573,368,923,641.1,85.7,104,99],[1116,803126,720,559,360,873,677.7,94.2,112,108],[990,699792,707,536,348,843,658.2,93.1,114,120],[1030,755218,733,558,352,898,612.8,83.6,111,109],[1011,679127,672,533,336,847,556.9,82.9,122,121],[774,537920,695,550,354,851,561.8,80.8,117,111],[938,700904,747,574,364,894,624.9,83.6,106,98],[1161,834812,719,547,351,877,682.1,94.9,113,113],[1076,724299,673,550,360,867,477.8,71.0,121,112],[805,566929,704,544,350,866,622.1,88.3,115,116],[230,149094,648,501,348,776,729.5,112.5,125,126],[742,480368,647,521,346,778,514.2,79.4,126,125],[1478,966077,654,528,346,816,497.3,76.1,124,123],[332,219469,661,522,351,797,504.9,76.4,123,124]],"106":[[1772,3530447,1992,929,449,2020,5250.7,263.5,1,1],[2988,4539054,1519,832,436,1668,3219.0,211.9,2,4],[648,862882,1332,724,410,1448,3144.0,236.1,4,11],[2661,3389488,1274,829,440,1557,1615.3,126.8,6,5],[3517,5112960,1454,861,448,1817,2521.8,173.5,3,3],[1799,1616820,899,616,373,1064,1091.3,121.4,54,67],[1311,1617453,1234,911,497,1647,1116.5,90.5,7,2],[2454,2976346,1213,781,422,1503,1533.9,126.5,8,6],[1447,1656421,1145,772,411,1424,1787.9,156.2,10,7],[306,262438,858,624,357,1041,889.2,103.7,68,59],[1357,1517316,1118,767,435,1490,1215.7,108.7,14,8],[1290,1344857,1043,696,397,1299,1113.9,106.8,19,14],[1247,1661487,1332,688,389,1274,8620.8,647.0,5,18],[1268,1463226,1154,745,416,1417,1252.8,108.6,9,10],[1061,1114000,1050,642,389,1196,1256.3,119.7,18,42],[743,700120,942,656,376,1149,1039.5,110.3,37,37],[1359,1428250,1051,685,383,1316,1480.1,140.8,17,19],[1644,1694331,1031,653,384,1239,1351.2,131.1,21,39],[2334,2658127,1139,709,419,1341,1704.1,149.6,11,12],[1129,1079331,956,654,375,1249,962.1,100.6,32,38],[1180,1150958,975,694,402,1223,939.9,96.4,29,15],[256,284547,1112,755,389,1429,1620.8,145.8,15,9],[1070,1215977,1136,659,402,1181,2229.7,196.2,12,35],[1259,990968,787,600,385,1011,656.4,83.4,95,78],[1551,1339836,864,627,386,1082,802.7,92.9,64,52],[1259,1303817,1036,703,380,1373,1051.9,101.6,20,13],[484,442457,914,595,330,1103,1069.8,117.0,52,83],[910,768024,844,621,390,1078,714.0,84.6,76,62],[1434,1347103,939,618,370,1047,1493.6,159.0,39,63],[1419,1394156,982,693,402,1248,1056.5,107.5,27,16],[784,887977,1133,668,391,1248,1859.3,164.2,13,28],[2166,2187489,1010,669,381,1223,1306.8,129.4,22,25],[817,726254,889,624,367,1068,920.8,103.6,56,58],[1280,1387214,1084,660,409,1226,1398.5,129.0,16,32],[1406,1381638,983,657,376,1186,1146.7,116.7,26,36],[980,909418,928,629,390,1134,982.7,105.9,44,50],[1928,1821401,945,665,383,1196,1133.9,120.0,35,29],[901,888452,986,660,395,1259,983.3,99.7,24,33],[1307,1245934,953,648,375,1151,1049.5,110.1,33,40],[2567,2425186,945,660,397,1205,904.7,95.8,36,34],[1256,1216804,969,646,389,1151,1149.5,118.7,31,41],[1043,887487,851,594,379,1025,852.5,100.2,72,88],[1197,1107798,925,670,392,1230,825.2,89.2,46,24],[1047,970710,927,633,385,1143,932.1,100.5,45,47],[1581,1532411,969,674,371,1235,1197.6,123.5,30,20],[1616,1412353,874,635,377,1110,797.6,91.3,62,45],[703,633007,900,665,370,1071,893.1,99.2,53,30],[705,655035,929,631,391,1145,883.0,95.0,43,48],[1170,1152409,985,669,402,1202,1076.4,109.3,25,26],[842,790019,938,599,363,998,1696.2,180.8,40,79],[1727,1486348,861,603,376,1085,903.9,105.0,67,76],[1025,885533,864,611,396,1019,847.4,98.1,65,69],[1006,987750,982,691,392,1256,1089.4,111.0,28,17],[1753,1421597,811,580,376,998,754.3,93.0,85,94],[651,613013,942,623,385,1133,1076.5,114.3,38,60],[2025,1851541,914,612,377,1094,1010.9,110.6,51,68],[1171,1029702,879,618,348,1084,842.1,95.8,59,64],[2307,2184499,947,673,412,1188,896.7,94.7,34,21],[1276,1191783,934,627,388,1050,1339.2,143.4,42,51],[1115,1123229,1007,672,388,1339,1029.1,102.2,23,22],[1580,1342597,850,605,377,1018,948.3,111.6,73,72],[652,551729,846,627,350,1057,795.0,94.0,75,53],[1285,1175542,915,664,400,1176,793.6,86.8,50,31],[1946,1680250,863,669,394,1127,689.3,79.8,66,27],[2302,2125928,924,672,391,1218,811.5,87.9,47,23],[1003,924551,922,634,382,1139,996.0,108.1,48,46],[1220,971699,796,589,371,955,791.6,99.4,92,92],[1309,1199818,917,642,373,1098,1092.1,119.2,49,43],[1104,977862,886,623,372,1125,831.2,93.8,57,61],[1220,1066910,875,610,381,1087,867.2,99.2,61,70],[750,520892,695,535,340,884,560.5,80.7,121,122],[932,823501,884,626,364,1079,967.5,109.5,58,55],[787,613070,779,604,373,983,650.3,83.5,101,73],[1857,1622053,873,595,375,1060,872.6,99.9,63,84],[978,810804,829,595,368,1014,773.3,93.3,79,86],[880,689462,783,568,337,982,773.1,98.7,99,105],[1859,1463941,787,565,357,979,811.1,103.0,96,108],[1379,1115232,809,579,356,1000,821.8,101.6,87,97],[847,722447,853,606,355,1066,874.4,102.5,70,71],[896,732468,817,597,388,1026,728.3,89.1,84,80],[4286,3752702,876,637,386,1135,858.6,98.1,60,44],[1255,1037632,827,596,365,982,859.4,103.9,80,81],[944,771418,817,630,357,1070,704.8,86.2,83,49],[1151,859083,746,566,370,925,598.9,80.2,108,107],[752,603351,802,571,333,961,942.3,117.4,90,101],[2665,2220301,833,618,379,1075,728.9,87.5,78,65],[706,588861,834,617,369,1079,727.8,87.2,77,66],[694,567964,818,569,366,1024,741.2,90.6,82,102],[1427,1208788,847,595,381,1014,836.6,98.8,74,85],[1137,967380,851,603,371,1034,989.6,116.3,71,77],[1207,1033555,856,626,379,1056,823.0,96.1,69,56],[456,427085,937,626,363,1111,1885.0,201.3,41,54],[1615,1252731,776,604,388,1009,648.1,83.5,102,74],[2879,2561029,890,624,387,1069,2689.3,302.3,55,57],[1335,1075602,806,586,363,1010,724.0,89.9,88,93],[1128,889352,788,596,357,997,715.9,90.8,94,82],[779,642451,825,566,379,980,892.2,108.2,81,106],[1330,1042863,784,592,387,949,674.1,86.0,97,90],[1341,1014146,756,557,349,894,730.7,96.6,105,111],[819,659393,805,590,391,937,822.0,102.1,89,91],[970,776656,801,573,367,1005,1194.2,149.2,91,100],[974,702580,721,552,364,884,605.7,84.0,115,116],[783,606153,774,594,376,972,636.9,82.3,103,89],[1147,869267,758,595,367,957,651.0,85.9,104,87],[1253,896380,715,556,356,880,603.3,84.3,116,113],[657,486036,740,569,370,872,758.8,102.6,110,104],[1838,1488185,810,580,357,944,1005.7,124.2,86,95],[937,733659,783,579,372,937,795.8,101.6,98,98],[379,264430,698,543,355,851,575.8,82.5,120,118],[1444,1088277,754,580,367,945,675.3,89.6,106,96],[825,612416,742,604,354,968,570.2,76.8,109,75],[1042,815798,783,564,366,998,703.2,89.8,100,109],[1283,1014677,791,578,379,957,974.2,123.2,93,99],[1114,816577,733,557,354,883,756.3,103.2,113,112],[971,688806,709,527,348,882,613.5,86.5,117,125],[1027,757089,737,560,352,909,621.4,84.3,111,110],[1017,695935,684,541,334,842,595.2,87.0,123,119],[793,554215,699,540,350,862,556.1,79.6,119,120],[925,696899,753,569,364,903,674.5,89.5,107,103],[1161,844130,727,552,361,905,676.4,93.0,114,115],[1075,736888,685,553,366,885,500.1,73.0,122,114],[842,591437,702,546,353,896,581.3,82.8,118,117],[221,145029,656,490,354,776,846.0,128.9,126,126],[748,492333,658,528,347,819,521.1,79.2,125,124],[1453,962540,662,531,357,818,512.6,77.4,124,123],[331,243034,734,538,361,780,1356.2,184.7,112,121]],"107":[[1806,3018264,1671,966,441,2006,2355.7,141.0,1,2],[2974,4406637,1482,874,455,1692,2671.6,180.3,2,4],[670,849442,1268,735,412,1443,2928.2,231.0,6,14],[2744,3539135,1290,841,448,1597,1577.7,122.3,5,5],[3565,5111619,1434,881,466,1826,2128.4,148.4,3,3],[1771,1648505,931,639,393,1157,1026.4,110.3,53,64],[1302,1687017,1296,973,505,1768,1128.6,87.1,4,1],[2449,3015293,1231,797,422,1591,1353.1,109.9,7,8],[1416,1692014,1195,807,440,1484,1834.3,153.5,8,6],[288,259101,900,655,387,1071,994.0,110.5,62,53],[1351,1613585,1194,806,466,1565,1575.0,131.9,9,7],[1340,1408720,1051,693,399,1292,1153.3,109.7,20,32],[1205,1415904,1175,736,409,1348,2857.5,243.2,11,13],[1241,1449202,1168,774,436,1433,1225.6,105.0,12,9],[1038,1137387,1096,670,389,1250,1272.0,116.1,15,44],[763,782302,1025,715,400,1279,1100.2,107.3,23,17],[1306,1383429,1059,700,396,1354,1205.4,113.8,19,26],[1595,1720551,1079,703,407,1283,1513.2,140.3,17,22],[2355,2642120,1122,760,425,1416,1162.8,103.6,13,11],[1108,1084762,979,701,406,1269,959.4,98.0,34,24],[1171,1189520,1016,686,394,1304,1000.3,98.5,24,35],[252,274539,1089,765,400,1449,1068.3,98.1,16,10],[1038,1155990,1114,682,408,1258,1562.5,140.3,14,40],[1253,1014503,810,617,402,1014,678.7,83.8,96,84],[1574,1447330,920,683,419,1161,843.3,91.7,55,39],[1238,1329230,1074,711,415,1438,1104.7,102.9,18,19],[475,461497,972,651,333,1170,1140.7,117.4,38,58],[897,779850,869,650,390,1109,766.3,88.1,74,59],[1457,1401387,962,633,376,1124,1230.4,127.9,41,72],[1385,1375222,993,693,400,1294,963.4,97.0,28,33],[743,886021,1192,731,430,1356,1842.7,154.5,10,15],[2113,2134569,1010,677,402,1270,1056.1,104.5,25,41],[815,763844,937,641,377,1126,985.7,105.2,51,63],[1272,1314292,1033,698,426,1257,1110.9,107.5,21,27],[1372,1343852,979,676,389,1236,1008.3,102.9,35,42],[957,905680,946,633,382,1208,960.2,101.5,48,73],[1859,1764828,949,687,388,1218,964.8,101.6,46,34],[865,891071,1030,712,398,1297,1047.7,101.7,22,18],[1289,1255360,974,685,399,1292,993.6,102.0,36,37],[2572,2536992,986,695,415,1260,966.2,98.0,29,31],[1283,1259438,982,659,392,1231,1066.2,108.6,31,52],[1041,907656,872,634,405,1071,870.1,99.8,72,71],[1168,1136488,973,696,396,1240,970.4,99.7,37,29],[1025,972301,949,663,395,1145,936.6,98.7,47,48],[1564,1542628,986,684,394,1303,1024.9,103.9,30,38],[1573,1410239,897,665,393,1136,854.1,95.3,64,47],[703,654592,931,719,413,1141,900.1,96.7,52,16],[677,645247,953,669,409,1189,910.5,95.5,44,45],[1135,1131333,997,695,425,1224,955.1,95.8,27,30],[814,716779,881,606,380,1030,931.8,105.8,69,89],[1712,1536883,898,636,390,1140,931.5,103.8,63,68],[997,869008,872,626,389,1057,877.9,100.7,73,79],[998,976957,979,710,406,1233,918.5,93.8,33,20],[1718,1457425,848,590,375,1049,829.1,97.7,84,109],[649,623340,960,648,408,1189,978.0,101.8,43,61],[2023,1924181,951,665,393,1139,981.8,103.2,45,46],[1124,1019786,907,639,380,1133,849.5,93.6,56,65],[2268,2222892,980,703,434,1259,915.2,93.4,32,23],[1269,1178302,929,660,383,1122,1078.1,116.1,54,51],[1108,1106537,999,696,400,1327,927.0,92.8,26,28],[1521,1352292,889,655,409,1108,882.0,99.2,65,54],[644,559495,869,639,368,1096,832.8,95.8,75,66],[1311,1258043,960,705,423,1232,838.4,87.4,42,21],[2043,1802356,882,686,422,1147,702.2,79.6,68,36],[2291,2224760,971,701,408,1246,893.6,92.0,39,25],[1011,975108,964,673,394,1223,994.4,103.1,40,43],[1226,990845,808,611,373,1009,785.0,97.1,97,88],[1284,1211708,944,663,396,1139,1044.1,110.6,49,49],[1093,1026319,939,662,396,1174,901.9,96.0,50,50],[1202,1089796,907,622,391,1125,927.3,102.3,57,81],[2282,2054722,900,742,436,1225,687.7,76.4,61,12],[905,819362,905,623,381,1152,857.1,94.7,59,80],[771,607161,787,630,385,972,643.6,81.7,105,76],[1847,1670690,905,634,398,1103,885.5,97.9,58,69],[947,812666,858,631,391,1061,809.6,94.3,79,75],[859,710407,827,611,359,1025,832.5,100.7,90,87],[1803,1453306,806,594,363,982,791.6,98.2,99,106],[1371,1144817,835,604,357,1039,799.7,95.8,89,96],[827,731672,885,617,350,1091,983.5,111.2,67,82],[900,759779,844,639,382,1072,763.2,90.4,86,67],[4223,3803178,901,654,400,1157,855.3,95.0,60,56],[1264,1084547,858,616,382,1042,860.7,100.3,80,85],[904,763371,844,648,399,1094,698.7,82.7,85,62],[1120,867148,774,595,361,984,692.8,89.5,110,105],[767,619174,807,591,352,999,751.4,93.1,98,108],[2620,2251916,860,650,397,1117,744.0,86.6,78,60],[686,578652,844,604,380,1089,769.6,91.2,87,94],[648,555149,857,606,376,1071,797.6,93.1,81,91],[1364,1207911,886,634,407,1072,854.5,96.5,66,70],[1130,966821,856,595,382,1062,831.8,97.2,82,104],[1224,1058664,865,628,384,1081,838.8,97.0,77,77],[443,387844,875,631,355,1145,824.7,94.2,71,74],[2036,1656995,814,654,392,1053,726.4,89.3,94,57],[2837,2496857,880,655,403,1110,958.4,108.9,70,55],[1297,1092368,842,604,381,1033,773.4,91.8,88,95],[1131,926603,819,617,380,1052,729.1,89.0,93,83],[774,659280,852,606,386,1025,841.0,98.7,83,92],[1303,1049534,805,615,392,1003,689.9,85.6,100,86],[1310,1039201,793,584,362,958,807.6,101.8,103,110],[775,639680,825,627,413,1009,692.6,83.9,92,78],[946,742943,785,602,377,986,666.1,84.8,106,97],[1009,819250,812,583,372,939,1498.3,184.5,95,112],[767,601163,784,598,385,1007,657.8,83.9,107,102],[1133,864469,763,596,374,961,637.2,83.5,112,103],[1254,952126,759,575,376,913,653.6,86.1,114,114],[652,489309,750,571,377,934,750.6,100.0,116,115],[1771,1462029,826,598,376,983,864.1,104.7,91,100],[901,703725,781,602,381,965,693.2,88.8,108,98],[367,269961,736,570,377,913,608.3,82.7,119,117],[1410,1117126,792,601,387,988,699.6,88.3,104,99],[805,606143,753,606,388,993,557.5,74.0,115,93],[1049,839228,800,592,379,971,745.5,93.2,102,107],[1241,1075070,866,606,397,991,1479.6,170.8,76,90],[1057,818656,775,567,376,920,821.7,106.1,109,118],[977,724909,742,564,367,912,668.6,90.1,117,119],[1029,790130,768,577,358,936,697.9,90.9,111,113],[1009,703086,697,543,355,882,591.2,84.8,124,125],[766,546888,714,549,364,885,588.5,82.4,121,123],[879,705426,803,598,384,963,724.4,90.3,101,101],[1133,860933,760,559,375,924,729.5,96.0,113,121],[1021,733821,719,584,374,911,528.9,73.6,120,111],[806,595073,738,570,362,926,671.8,91.0,118,116],[213,148890,699,539,377,784,794.1,113.6,123,126],[736,515329,700,561,367,864,552.6,78.9,122,120],[1432,976383,682,548,352,841,565.1,82.9,126,124],[319,218372,685,559,360,853,519.5,75.9,125,122]],"108":[[1873,2824881,1508,754,298,1810,2342.9,155.3,1,1],[3002,3748683,1249,687,282,1448,1991.1,159.4,2,3],[682,782274,1147,564,262,1254,2996.9,261.3,4,10],[2840,3139825,1106,657,285,1387,1514.4,137.0,5,5],[3643,4452380,1222,680,301,1527,1977.8,161.8,3,4],[1773,1339422,755,472,237,948,992.2,131.3,45,47],[1311,1420224,1083,724,320,1506,1110.9,102.5,6,2],[2467,2595547,1052,590,270,1360,1327.9,126.2,7,7],[1425,1404269,985,592,270,1221,1708.7,173.4,10,6],[353,310211,879,508,243,1049,1222.5,139.1,21,22],[1375,1309317,952,588,272,1238,1486.8,156.1,12,8],[1466,1296321,884,535,250,1105,1100.5,124.5,20,16],[1253,1259791,1005,540,233,1125,3628.5,360.9,8,14],[1259,1201712,954,578,260,1157,1131.9,118.6,11,9],[1067,955803,896,445,227,1035,1301.6,145.3,17,67],[812,688067,847,511,238,1046,1124.5,132.7,23,21],[1342,1205472,898,545,257,1167,1098.6,122.3,16,11],[1592,1443420,907,495,246,1062,1970.0,217.3,15,32],[2393,2181140,911,541,253,1135,1115.6,122.4,13,13],[1145,908533,793,507,244,1009,969.9,122.2,31,24],[1163,976213,839,539,237,1085,984.2,117.2,24,15],[307,273098,890,542,263,1113,1073.0,120.6,18,12],[1042,945402,907,498,247,1021,1532.5,168.9,14,30],[1326,891977,673,446,224,844,821.1,122.1,74,66],[1677,1237042,738,508,240,976,787.5,106.8,50,23],[1248,1075576,862,530,247,1151,1007.7,116.9,22,17],[467,372701,798,461,226,1011,1062.0,133.1,29,51],[892,634174,711,459,226,951,793.7,111.6,59,52],[1510,1184899,785,457,218,955,1056.7,134.7,37,53],[1377,1084754,788,476,234,1065,917.3,116.4,34,45],[758,749298,989,528,247,1091,1769.4,179.0,9,18],[2126,1696951,798,480,226,997,956.4,119.8,28,42],[821,620944,756,457,215,909,952.3,125.9,44,54],[1314,1167497,889,499,255,1027,1247.4,140.4,19,29],[1406,1105970,787,495,245,989,885.8,112.6,35,33],[979,718552,734,425,209,916,884.2,120.5,53,83],[1853,1390353,750,484,235,949,857.7,114.3,47,37],[887,730261,823,480,229,1037,1009.7,122.6,25,41],[1301,1007431,774,483,229,994,955.6,123.4,41,38],[2617,2070514,791,489,237,1006,932.9,117.9,33,34],[1296,1059876,818,482,234,988,1094.9,133.9,26,39],[1191,847165,711,444,219,919,839.7,118.0,60,69],[1167,910619,780,507,233,1013,911.9,116.9,38,25],[1042,786219,755,454,213,939,951.0,126.0,46,57],[1572,1235712,786,481,239,976,1075.9,136.9,36,40],[1572,1109965,706,462,215,929,859.6,121.7,63,50],[715,540195,756,522,227,939,926.8,122.7,42,19],[653,480382,736,489,240,927,804.7,109.4,52,35],[1144,892558,780,480,242,953,890.4,114.1,39,43],[813,571283,703,430,217,828,968.1,137.8,65,81],[1731,1236587,714,453,228,927,893.1,125.0,58,60],[1010,706925,700,450,234,848,814.4,116.3,66,61],[982,776394,791,513,252,1027,873.9,110.5,32,20],[1742,1097763,630,392,200,802,737.8,117.1,93,108],[654,527198,806,484,246,1005,1038.8,128.9,27,36],[2051,1528730,745,465,223,916,936.1,125.6,49,49],[1156,798769,691,435,223,896,757.0,109.5,69,75],[2276,1768597,777,502,240,1013,917.3,118.0,40,28],[1293,925912,716,456,220,864,987.7,137.9,56,55],[1124,892652,794,497,227,1051,886.2,111.6,30,31],[1574,1099630,699,447,216,854,940.5,134.6,67,65],[655,461759,705,454,224,922,795.0,112.8,64,59],[1331,978952,736,503,233,980,763.9,103.9,51,27],[2122,1456258,686,476,229,945,667.9,97.3,70,46],[2343,1772145,756,477,229,992,881.6,116.6,43,44],[1036,755283,729,448,209,929,950.2,130.3,54,62],[1229,742826,604,413,200,750,703.0,116.3,98,93],[1280,957343,748,470,225,901,960.8,128.5,48,48],[1100,786114,715,454,217,933,802.6,112.3,57,58],[1212,856557,707,447,218,842,906.9,128.3,62,64],[2442,1701710,697,506,251,972,653.3,93.7,68,26],[905,650536,719,448,222,897,809.5,112.6,55,63],[764,451915,592,418,204,757,600.6,101.5,103,90],[1855,1319655,711,442,216,862,915.7,128.7,61,70],[964,639043,663,421,219,818,761.7,114.9,81,86],[859,562563,655,431,202,834,787.9,120.3,85,80],[1905,1218206,639,406,202,785,875.5,136.9,88,97],[1363,899639,660,415,199,771,814.8,123.5,83,91],[839,567494,676,434,196,865,784.0,115.9,73,77],[918,617629,673,420,212,842,880.9,130.9,75,88],[4325,2904685,672,437,210,880,769.8,114.6,76,73],[1284,812125,632,403,202,802,734.2,116.1,92,99],[913,595167,652,456,220,848,664.7,102.0,86,56],[1125,657463,584,397,184,739,620.5,106.2,108,103],[774,492126,636,411,198,773,780.6,122.8,91,94],[2619,1704291,651,438,210,849,702.2,107.9,87,72],[676,430108,636,421,216,803,702.9,110.5,90,87],[640,428515,670,434,208,863,747.0,111.6,78,78],[1381,922749,668,440,210,827,785.3,117.5,80,71],[1125,769937,684,427,207,863,838.3,122.5,71,82],[1230,807750,657,425,199,840,815.5,124.2,84,84],[453,308814,682,436,194,888,826.5,121.2,72,74],[2126,1294431,609,445,212,805,632.1,103.8,96,68],[2861,1894793,662,433,213,855,843.2,127.3,82,79],[1310,876355,669,424,212,836,820.6,122.7,79,85],[1113,707724,636,435,216,815,700.3,110.1,89,76],[809,543888,672,400,218,814,875.6,130.2,77,100],[1315,781108,594,409,214,769,612.1,103.0,102,95],[1285,752969,586,395,182,709,718.7,122.7,106,105],[810,499164,616,413,216,772,673.2,109.2,94,92],[949,566793,597,419,200,764,621.2,104.0,101,89],[1040,627057,603,390,196,764,777.4,128.9,100,109],[752,442416,588,399,205,776,615.9,104.7,105,101],[1141,657500,576,399,206,721,670.6,116.4,111,102],[1227,693606,565,377,195,680,638.8,113.0,115,117],[655,383508,586,379,212,725,813.3,138.9,107,116],[1809,1106871,612,388,189,743,760.9,124.4,95,111],[924,533848,578,384,208,701,678.6,117.5,110,113],[349,177184,508,366,178,695,508.7,100.2,124,123],[1394,821156,589,406,206,739,648.1,110.0,104,98],[801,447322,558,409,203,750,534.1,95.6,117,96],[1052,640182,609,396,212,750,678.3,111.5,97,104],[1260,734357,583,395,197,745,615.6,105.6,109,106],[1073,606889,566,376,193,693,775.8,137.2,114,118],[993,563324,567,380,208,707,655.3,115.5,113,115],[1037,592911,572,385,188,711,642.5,112.4,112,112],[982,505505,515,383,181,673,541.2,105.1,123,114],[745,397135,533,374,212,676,554.0,103.9,119,119],[892,538843,604,393,208,760,693.2,114.8,99,107],[1125,633366,563,369,199,681,719.0,127.7,116,122],[1034,538192,520,389,192,674,540.2,103.8,121,110],[774,421999,545,371,199,688,605.8,111.1,118,121],[202,107362,531,360,202,632,872.1,164.1,120,125],[738,380989,516,365,200,636,542.7,105.1,122,124],[1452,712454,491,353,178,604,528.4,107.7,125,126],[316,151890,481,373,195,620,471.5,98.1,126,120]],"109":[[1867,2837999,1520,824,327,1835,2221.8,146.2,1,1],[3011,3783431,1257,678,288,1444,2069.7,164.7,2,4],[698,830933,1190,605,270,1195,2528.7,212.4,4,8],[2935,3255319,1109,642,284,1377,1561.1,140.8,6,5],[3736,4559627,1220,686,288,1580,1574.6,129.0,3,3],[1963,1553481,791,489,233,983,1020.4,128.9,35,38],[1344,1513452,1126,753,326,1553,1223.4,108.6,5,2],[2457,2669937,1087,623,270,1414,1386.6,127.6,7,6],[1474,1449956,984,613,270,1288,1205.4,122.5,9,7],[369,341222,925,503,263,1121,1254.4,135.7,14,29],[1392,1384977,995,593,278,1227,1946.5,195.6,8,9],[1617,1533208,948,570,258,1176,1305.6,137.7,12,11],[1275,1239333,972,526,221,1147,3321.9,341.8,10,17],[1260,1210216,960,578,267,1208,1112.2,115.8,11,10],[1096,964156,880,442,209,993,1264.4,143.7,21,66],[804,693864,863,535,262,1123,1016.2,117.8,23,15],[1353,1220528,902,563,250,1156,1085.5,120.3,16,12],[1607,1430577,890,481,236,1084,1430.9,160.7,18,44],[2388,2229576,934,542,257,1139,1200.4,128.6,13,14],[1162,887907,764,495,235,990,855.2,111.9,45,33],[1195,1003602,840,530,227,1108,963.0,114.7,27,16],[358,320744,896,561,254,1114,1027.7,114.7,17,13],[1028,905643,881,485,247,927,1435.7,163.0,20,42],[1632,1211528,742,508,257,982,767.1,103.3,54,26],[1787,1350626,756,508,242,999,831.7,110.0,49,25],[1252,1064846,851,518,254,1106,986.6,116.0,25,20],[476,414597,871,490,229,1010,1221.7,140.3,22,36],[902,634834,704,430,215,938,783.6,111.3,66,81],[1588,1286057,810,469,205,986,1106.8,136.7,30,50],[1388,1169278,842,491,228,1067,1231.5,146.2,26,35],[779,708087,909,506,234,1008,1846.2,203.1,15,28],[2123,1711296,806,487,224,1014,1005.7,124.8,32,39],[834,630851,756,477,223,919,967.3,127.9,50,46],[1312,1163354,887,507,264,1040,1420.2,160.2,19,27],[1395,1192689,855,519,237,1052,1628.7,190.5,24,19],[952,722406,759,438,203,1008,952.4,125.5,48,70],[1842,1381751,750,473,227,944,898.9,119.8,53,49],[904,735478,814,461,216,1014,1035.2,127.2,29,54],[1303,1017249,781,497,247,989,978.3,125.3,39,32],[2693,2131187,791,480,221,999,963.2,121.7,36,45],[1282,1028747,802,509,246,994,988.1,123.1,33,24],[1257,979838,780,490,221,1000,935.9,120.1,40,37],[1199,922756,770,493,230,1026,839.0,109.0,43,34],[1048,797178,761,457,228,911,933.6,122.7,47,59],[1559,1231466,790,482,214,1006,1062.4,134.5,37,43],[1582,1085548,686,450,205,899,779.7,113.6,70,62],[714,571169,800,524,245,964,1113.6,139.2,34,18],[662,488191,737,459,228,912,853.8,115.8,59,56],[1140,894571,785,474,236,995,915.2,116.6,38,47],[834,585978,703,424,218,819,1026.9,146.2,67,89],[1739,1286875,740,459,221,924,969.8,131.1,56,55],[1035,764147,738,433,220,887,1088.3,147.4,57,79],[994,803690,809,513,246,1046,980.7,121.3,31,22],[1759,1156759,658,402,208,819,832.4,126.6,87,105],[669,521067,779,466,236,973,1050.4,134.9,42,52],[2025,1502627,742,469,210,907,939.8,126.7,55,51],[1160,854183,736,459,217,970,790.6,107.4,60,57],[2263,1761870,779,498,238,1016,892.8,114.7,41,31],[1275,932674,732,452,219,853,1114.8,152.4,62,60],[1100,913386,830,518,213,1085,949.8,114.4,28,21],[1606,1120492,698,448,219,899,786.4,112.7,68,64],[645,493409,765,458,239,915,1192.7,155.9,44,58],[1336,984506,737,501,237,957,787.5,106.9,58,30],[2165,1524206,704,486,235,954,691.6,98.2,65,41],[2308,1756222,761,486,246,997,844.9,111.0,46,40],[1045,767858,735,430,204,906,982.5,133.7,61,80],[1281,849914,663,425,213,798,918.8,138.5,82,87],[1310,986780,753,445,218,876,1049.2,139.3,51,65],[1131,850394,752,464,224,948,878.3,116.8,52,53],[1222,835001,683,442,213,812,793.3,116.1,72,67],[2530,1809481,715,512,248,990,699.9,97.9,64,23],[915,667801,730,441,203,880,925.1,126.8,63,68],[791,511405,647,436,206,846,685.8,106.1,92,75],[1851,1261264,681,434,212,848,793.4,116.4,75,78],[943,629358,667,429,217,849,781.2,117.0,81,83],[861,578763,672,449,209,806,905.3,134.7,78,63],[2017,1357265,673,407,198,828,899.7,133.7,77,97],[1385,926126,669,425,202,826,818.1,122.3,79,86],[843,542743,644,429,208,827,689.6,107.1,94,85],[908,628856,693,436,202,880,852.2,123.0,69,72],[4384,2992423,683,441,215,879,831.2,121.8,73,69],[1287,850366,661,404,200,806,855.1,129.4,85,101],[933,638045,684,474,221,886,733.2,107.2,71,48],[1115,682957,613,403,191,770,683.6,111.6,103,103],[757,491270,649,420,204,840,787.9,121.4,91,91],[2660,1736238,653,436,211,883,693.8,106.3,90,74],[659,436173,662,416,219,881,748.3,113.1,83,93],[644,422990,657,420,199,850,749.6,114.1,89,90],[1417,931471,657,425,196,787,772.2,117.5,88,88],[1140,775992,681,436,202,858,772.5,113.5,74,73],[1224,833202,681,429,195,847,900.5,132.3,76,82],[476,317879,668,435,201,914,697.0,104.4,80,76],[2160,1369960,634,452,217,873,630.3,99.4,95,61],[2961,1956806,661,429,215,852,815.3,123.4,84,84],[1330,858935,646,404,201,815,749.2,116.0,93,102],[1141,720534,631,437,223,812,656.3,103.9,97,71],[831,548180,660,406,208,796,848.8,128.7,86,98],[1306,809669,620,435,215,807,656.6,105.9,100,77],[1276,794204,622,395,185,734,862.4,138.6,99,109],[814,514253,632,405,210,768,722.8,114.4,96,99],[917,555635,606,401,189,775,683.0,112.7,107,106],[1032,628503,609,405,211,777,1019.1,167.3,104,100],[744,452340,608,403,210,761,699.8,115.1,105,104],[1154,653855,567,395,200,718,653.5,115.3,114,110],[1236,749405,606,390,194,728,715.1,118.0,108,111],[678,404043,596,397,199,746,795.1,133.4,109,108],[1778,1110429,625,383,192,741,809.4,129.6,98,119],[930,573139,616,399,203,802,718.6,116.6,101,107],[371,189867,512,386,181,707,477.0,93.2,122,117],[1394,855324,614,415,205,752,725.5,118.2,102,94],[827,476649,576,410,208,779,577.6,100.2,113,96],[1072,650316,607,418,208,741,641.7,105.8,106,92],[1274,719262,565,388,211,719,569.9,100.9,115,115],[1049,611789,583,387,192,692,783.3,134.3,110,116],[988,549376,556,375,198,707,637.9,114.7,117,122],[1016,587866,579,410,192,712,583.8,100.9,112,95],[986,541370,549,389,188,697,678.8,123.6,118,112],[774,406851,526,365,190,654,623.9,118.7,121,125],[898,522922,582,382,189,737,673.6,115.7,111,120],[1152,650810,565,365,190,710,679.5,120.3,116,124],[1037,551520,532,389,184,674,579.9,109.0,119,113],[801,426503,532,369,192,677,565.1,106.1,120,123],[199,96970,487,382,194,593,449.4,92.2,126,121],[753,385588,512,384,206,631,529.8,103.5,123,118],[1432,711963,497,359,190,635,534.6,107.5,124,126],[320,156791,490,389,204,669,414.8,84.7,125,114]],"110":[[1852,3159444,1706,842,355,1969,4376.4,256.5,1,1],[2965,4018377,1355,695,289,1544,2439.5,180.0,2,4],[684,891154,1303,582,253,1298,3457.3,265.4,3,13],[2941,3495933,1189,677,281,1479,1652.8,139.1,5,5],[3701,4756755,1285,704,293,1636,1722.8,134.0,4,3],[2474,2445923,989,607,262,1224,1495.6,151.3,16,9],[1403,1659055,1183,791,322,1539,1408.2,119.1,7,2],[2449,2906067,1187,676,301,1503,1614.6,136.1,6,6],[1550,1618301,1044,651,291,1304,1301.1,124.6,8,7],[370,377389,1020,527,272,1140,1472.0,144.3,12,29],[1388,1422212,1025,616,277,1297,1688.6,164.8,11,8],[1628,1699606,1044,603,268,1231,1790.4,171.5,9,10],[1249,1243586,996,535,212,1167,2807.8,282.0,15,23],[1269,1279918,1009,601,271,1258,1199.9,119.0,13,11],[1062,990617,933,484,229,1068,1269.0,136.1,21,52],[790,739691,936,563,259,1233,1133.7,121.1,20,17],[1336,1276910,956,563,250,1164,1289.5,134.9,18,16],[1606,1520970,947,498,254,1071,1456.5,153.8,19,42],[2350,2362964,1006,571,256,1191,1411.5,140.4,14,14],[1176,919988,782,491,236,973,940.2,120.2,56,49],[1148,1032321,899,541,249,1132,1102.7,122.6,24,20],[376,335226,892,565,252,1202,972.9,109.1,26,15],[1027,988771,963,515,250,995,1735.2,180.2,17,34],[2115,1803298,853,591,290,1133,908.8,106.6,33,12],[1788,1450787,811,559,251,1042,952.5,117.4,45,18],[1243,1114659,897,538,255,1161,1116.3,124.5,25,21],[469,422430,901,478,222,993,1344.2,149.2,23,57],[880,647416,736,460,222,993,814.7,110.7,70,76],[1608,1455664,905,511,233,1016,1587.2,175.3,22,37],[1386,1217257,878,535,255,1129,1166.0,132.8,28,24],[777,801459,1031,494,245,1069,2742.6,265.9,10,48],[2147,1866423,869,511,235,1069,1189.8,136.9,31,38],[801,652487,815,497,238,998,1039.6,127.6,44,44],[1294,1128703,872,534,261,1064,1050.5,120.4,30,25],[1352,1159986,858,543,258,1069,1117.7,130.3,32,19],[995,780967,785,484,217,983,962.4,122.6,53,53],[1805,1416772,785,500,240,991,910.9,116.0,52,40],[848,721490,851,476,212,1010,1326.0,155.8,34,58],[1286,1079173,839,526,261,1056,1076.4,128.3,37,30],[2641,2235926,847,505,245,1019,1615.1,190.8,35,39],[1261,1053540,835,534,259,1030,1044.9,125.1,38,26],[1268,1064893,840,497,232,1122,1006.4,119.8,36,43],[1242,1025172,825,515,237,1089,949.9,115.1,40,35],[1042,866540,832,485,226,991,1088.8,130.9,39,51],[1536,1258922,820,489,225,1040,1184.8,144.6,43,50],[1561,1135378,727,482,224,950,867.0,119.2,74,55],[701,621892,887,514,260,1030,1984.9,223.7,27,36],[676,516946,765,464,216,940,935.8,122.4,63,69],[1101,879437,799,495,247,1000,913.6,114.4,49,46],[831,642983,774,455,220,882,1458.6,188.5,59,82],[1747,1313257,752,495,226,961,862.3,114.7,66,47],[1034,811449,785,472,233,934,1274.3,162.4,54,61],[987,812981,824,537,250,1105,930.3,113.0,41,22],[1699,1235811,727,431,215,878,1104.5,151.8,75,96],[646,519386,804,467,230,1000,1152.1,143.3,48,68],[2051,1590039,775,462,218,923,1059.2,136.6,58,73],[1144,897047,784,476,221,1009,926.1,118.1,55,59],[2249,1853724,824,522,256,1038,998.9,121.2,42,32],[1234,964151,781,471,239,913,1146.3,146.7,57,63],[1097,960195,875,533,248,1137,1064.2,121.6,29,27],[1615,1208725,748,471,227,931,911.0,121.7,67,64],[647,498638,771,460,207,969,1056.9,137.1,61,75],[1301,1028517,791,523,238,996,882.9,111.7,51,31],[2196,1655817,754,521,252,995,762.8,101.2,65,33],[2245,1788982,797,497,249,1039,972.9,122.1,50,45],[1047,802204,766,456,208,935,1116.5,145.7,62,81],[1400,997899,713,460,241,904,800.1,112.2,79,77],[1242,1003472,808,463,231,922,1191.2,147.4,46,71],[1116,898249,805,481,223,995,982.1,122.0,47,56],[1217,905965,744,471,234,921,874.4,117.5,69,65],[2523,1915103,759,531,257,1014,797.1,105.0,64,28],[887,685239,773,483,210,959,962.5,124.6,60,54],[904,638860,707,500,248,955,711.5,100.7,80,41],[1869,1397395,748,464,219,919,928.8,124.2,68,70],[914,671986,735,459,222,866,944.6,128.5,71,78],[835,586740,703,458,221,852,996.6,141.8,82,79],[1982,1445702,729,438,210,862,1122.3,153.9,72,91],[1350,982607,728,442,220,871,989.3,135.9,73,87],[833,568817,683,461,226,896,713.6,104.5,90,74],[887,642208,724,472,228,927,888.6,122.7,76,62],[4288,3094984,722,470,229,905,886.4,122.8,77,66],[1292,880229,681,437,209,859,834.8,122.5,92,92],[955,667208,699,470,223,901,781.1,111.8,84,67],[1143,757102,662,426,201,806,766.0,115.6,96,100],[729,500162,686,442,189,886,842.5,122.8,89,88],[2682,1863564,695,455,218,900,771.5,111.0,86,83],[632,444760,704,463,226,978,769.3,109.3,81,72],[621,443427,714,441,221,879,878.1,123.0,78,90],[1393,938069,673,428,197,837,785.9,116.7,93,98],[1103,761488,690,429,209,873,812.5,117.7,88,97],[1201,841991,701,446,205,875,999.8,142.6,83,86],[459,318131,693,433,206,904,774.9,111.8,87,95],[2156,1470477,682,475,223,892,767.7,112.6,91,60],[2903,2022560,697,453,223,908,882.3,126.6,85,84],[1277,853009,668,417,205,846,772.8,115.7,94,106],[1138,749112,658,450,227,860,683.6,103.8,98,85],[825,548538,665,436,214,818,792.2,119.2,95,93],[1245,820448,659,458,225,819,720.6,109.3,97,80],[1260,810515,643,406,201,757,834.6,129.8,103,115],[796,501754,630,421,204,788,694.9,110.2,107,103],[885,567320,641,423,206,837,698.1,108.9,105,102],[995,608378,611,404,209,767,708.4,115.9,111,116],[752,467823,622,420,215,795,685.9,110.2,109,105],[1146,711099,621,413,205,759,759.8,122.5,110,111],[1237,803384,649,415,221,779,779.4,120.0,100,108],[649,417433,643,434,228,809,840.0,130.6,102,94],[1733,1126368,650,417,206,780,842.4,129.6,99,107],[893,569568,638,415,198,806,755.0,118.4,106,109],[360,192967,536,392,185,705,500.9,93.5,123,122],[1364,875905,642,442,226,761,755.5,117.6,104,89],[806,490978,609,421,207,802,621.0,102.0,112,104],[1060,683311,645,423,222,793,745.2,115.6,101,101],[1256,784039,624,427,221,762,716.6,114.8,108,99],[1037,631518,609,407,215,706,862.4,141.6,113,113],[971,585214,603,404,203,762,717.6,119.1,115,117],[1005,600753,598,415,213,730,618.4,103.5,116,110],[969,546742,564,400,207,696,706.8,125.3,121,119],[762,433348,569,399,210,696,627.5,110.3,119,121],[873,528763,606,409,213,753,635.1,104.9,114,112],[1100,622604,566,391,196,694,650.7,115.0,120,123],[1017,584223,574,399,209,727,690.2,120.2,117,120],[787,437499,556,385,194,741,601.2,108.2,122,124],[189,94242,499,359,188,618,481.0,96.5,126,126],[755,429578,569,404,195,685,714.9,125.7,118,118],[1387,736600,531,383,198,658,540.8,101.8,125,125],[303,161336,532,407,214,690,510.7,95.9,124,114]],"111":[[1930,3420242,1772,953,403,2187,2623.2,148.0,1,1],[3028,4636660,1531,785,337,1751,2731.6,178.4,3,3],[679,860523,1267,708,307,1491,1655.6,130.6,8,8],[2999,3984088,1328,750,323,1661,1750.6,131.8,5,5],[3844,5412417,1408,770,322,1725,1925.6,136.8,4,4],[3108,3832693,1233,750,325,1524,1815.9,147.3,9,6],[1483,1927720,1300,847,346,1692,1768.6,136.1,6,2],[2493,3240469,1300,737,338,1589,1825.7,140.5,7,7],[1569,1783997,1137,660,314,1437,1395.9,122.8,12,12],[384,437986,1141,576,280,1340,1672.2,146.6,11,26],[1435,1637547,1141,676,313,1459,1778.7,155.9,10,10],[1795,2032663,1132,655,301,1349,2055.6,181.5,13,13],[1275,1405932,1103,596,262,1262,3128.3,283.7,15,20],[1293,1441049,1115,686,319,1373,1281.7,115.0,14,9],[1080,1185101,1097,525,238,1183,1766.6,161.0,16,56],[845,852768,1009,599,282,1286,1300.1,128.8,23,18],[1360,1399665,1029,630,290,1255,1309.8,127.3,22,15],[1636,1695881,1037,575,281,1192,1501.7,144.9,18,27],[2434,2647982,1088,624,277,1284,1514.6,139.2,17,16],[1209,1973438,1632,527,262,1097,25818.4,1581.7,2,55],[1160,1198415,1033,608,283,1277,1307.0,126.5,19,17],[393,396013,1008,675,299,1392,1041.3,103.3,24,11],[1043,1074962,1031,568,294,1125,1633.0,158.4,20,33],[2498,2399698,961,650,325,1256,1047.2,109.0,29,14],[1886,1731693,918,589,279,1176,1057.2,115.1,40,21],[1253,1220775,974,586,267,1249,1185.0,121.6,28,23],[494,488282,988,552,248,1163,1465.6,148.3,26,41],[920,811078,882,525,257,1148,992.5,112.6,51,57],[1643,1559858,949,549,255,1121,1495.9,157.6,33,42],[1408,1372600,975,573,275,1251,1399.0,143.5,27,30],[801,825479,1031,536,269,1136,1836.3,178.2,21,51],[2259,2118102,938,559,264,1135,1354.6,144.5,37,36],[831,785350,945,554,267,1140,1361.0,144.0,34,38],[1332,1256152,943,578,280,1165,1132.3,120.1,35,24],[1419,1360227,959,597,274,1208,1168.6,121.9,31,19],[1064,943631,887,537,248,1117,1081.7,122.0,48,49],[1802,1629079,904,588,269,1115,1075.9,119.0,43,22],[856,775349,906,548,244,1127,1101.6,121.6,42,45],[1314,1248825,950,574,268,1191,1273.0,133.9,32,28],[2698,2436751,903,553,260,1140,1112.9,123.2,44,40],[1318,1237022,939,577,280,1119,1263.8,134.7,36,25],[1294,1242924,961,544,263,1214,1311.3,136.5,30,46],[1271,1162828,915,560,256,1187,1062.8,116.2,41,35],[1047,976780,933,544,250,1111,1171.0,125.5,38,47],[1577,1407317,892,536,240,1124,1200.0,134.5,46,52],[1582,1278953,808,539,244,1057,919.1,113.7,72,48],[723,724375,1002,562,285,1128,2327.1,232.3,25,34],[681,592976,871,520,247,1068,1092.3,125.5,54,61],[1109,984171,887,555,260,1123,1044.6,117.7,47,37],[853,741820,870,491,229,934,1928.3,221.7,55,79],[1813,1485613,819,537,254,1026,973.5,118.8,69,50],[1053,899978,855,528,263,1049,1010.6,118.2,60,54],[1001,901821,901,573,273,1200,1025.0,113.8,45,31],[1771,1403784,793,462,231,957,1105.5,139.5,76,103],[673,589632,876,506,248,1080,1159.2,132.3,52,69],[2099,1820090,867,510,246,1045,1590.1,183.4,57,67],[1123,949832,846,505,252,1101,956.9,113.1,61,70],[2302,2029604,882,549,264,1094,1179.1,133.7,50,44],[1245,1066819,857,508,259,1000,1207.8,140.9,58,68],[1116,1039065,931,549,236,1195,1231.0,132.2,39,43],[1694,1471477,869,519,261,1067,1074.7,123.7,56,62],[640,539942,844,497,246,1027,1138.9,135.0,62,74],[1345,1170917,871,554,267,1069,1047.5,120.3,53,39],[2208,1847408,837,574,272,1087,869.5,103.9,64,29],[2306,1940727,842,522,263,1055,1045.2,124.2,63,59],[1048,877102,837,522,227,1035,1118.5,133.6,65,60],[1451,1106830,763,523,254,999,822.0,107.8,85,58],[1288,1137733,883,516,261,1057,1203.6,136.3,49,65],[1158,991985,857,488,232,1073,1076.8,125.7,59,86],[1210,988663,817,518,245,988,965.9,118.2,70,64],[2578,2127646,825,570,270,1089,905.5,109.7,68,32],[900,743487,826,518,244,1011,958.4,116.0,67,63],[902,713372,791,531,248,1049,857.3,108.4,78,53],[1899,1543158,813,490,243,978,1052.6,129.5,71,83],[925,747184,808,493,250,974,992.1,122.8,73,78],[838,663575,792,497,248,971,995.5,125.7,77,75],[2000,1615538,808,480,230,977,1168.7,144.7,74,89],[1373,1084242,790,491,227,980,1001.6,126.8,79,80],[857,679736,793,512,250,1015,944.4,119.1,75,66],[882,733923,832,504,243,992,1472.5,177.0,66,71],[4417,3474075,787,489,244,994,988.1,125.6,81,84],[1301,1027986,790,475,236,981,985.0,124.7,80,93],[997,750886,753,494,235,965,877.6,116.5,90,76],[1173,850261,725,475,201,901,828.1,114.2,97,95],[747,543357,727,471,214,1000,786.0,108.0,95,99],[2756,2079355,754,481,236,981,876.8,116.2,89,87],[658,492489,748,475,226,994,854.0,114.1,93,94],[598,456245,763,499,245,949,884.7,116.0,86,73],[1378,1053122,764,479,228,939,929.0,121.6,84,90],[1148,896218,781,489,233,978,970.0,124.2,82,85],[1214,911350,751,477,232,914,935.1,124.6,91,92],[459,351454,766,471,231,1006,834.5,109.0,83,98],[2232,1694286,759,504,253,990,856.0,112.8,87,72],[2988,2230203,746,479,246,951,922.2,123.5,94,91],[1304,978199,750,481,236,963,821.2,109.5,92,88],[1182,856532,725,491,250,928,764.9,105.5,96,81],[807,609904,756,450,241,888,950.3,125.7,88,107],[1267,914626,722,494,249,913,749.8,103.9,98,77],[1291,924028,716,473,223,884,859.0,120.0,99,97],[814,564745,694,462,240,856,774.6,111.7,106,104],[910,628838,691,450,220,877,753.7,109.1,110,109],[999,676820,677,425,224,838,820.4,121.1,112,122],[768,516884,673,440,221,893,713.2,106.0,113,115],[1159,829031,715,474,253,863,872.4,122.0,100,96],[1258,888226,706,441,235,849,853.7,120.9,103,113],[655,463466,708,466,241,867,978.0,138.2,101,100],[1758,1236750,703,453,231,831,854.3,121.4,104,106],[902,625432,693,463,229,862,854.3,123.2,107,102],[366,215705,589,448,216,754,560.6,95.1,123,110],[1398,980215,701,450,227,795,889.0,126.8,105,108],[798,551545,691,491,238,909,730.1,105.6,109,82],[1054,746544,708,465,231,891,812.2,114.7,102,101],[1277,870973,682,459,228,844,732.9,107.5,111,105],[1056,731869,693,441,216,802,1073.5,154.9,108,114],[1017,675929,665,429,222,803,953.2,143.4,115,121],[1003,672527,671,443,216,818,735.5,109.7,114,112],[963,604380,628,433,215,784,790.5,126.0,118,119],[778,480657,618,439,227,778,631.3,102.2,119,116],[895,581480,650,447,217,822,663.5,102.1,116,111],[1136,735662,648,430,232,795,769.6,118.8,117,120],[1057,653654,618,407,219,739,806.4,130.4,120,124],[799,468232,586,406,213,746,611.6,104.4,124,125],[198,118856,600,437,226,743,592.5,98.7,121,117],[743,439903,592,402,209,745,675.2,114.0,122,126],[1395,815349,584,415,214,721,632.8,108.3,126,123],[313,182799,584,437,231,707,598.1,102.4,125,118]],"112":[[1970,3680532,1868,996,417,2285,2886.5,154.5,1,1],[3126,4787225,1531,818,349,1802,2645.5,172.8,2,4],[670,934014,1394,747,318,1664,2494.0,178.9,5,8],[3108,4344844,1398,805,343,1732,1967.2,140.7,4,5],[3940,5565094,1412,766,323,1773,1905.9,134.9,3,7],[3684,4884513,1326,841,368,1726,1638.1,123.5,7,3],[1559,2077784,1333,860,380,1716,2017.1,151.3,6,2],[2575,3321385,1290,772,339,1667,1562.0,121.1,8,6],[1575,1824518,1158,698,323,1495,1421.0,122.7,11,12],[398,468367,1177,593,312,1463,1528.4,129.9,10,28],[1461,1790237,1225,713,331,1568,2449.9,199.9,9,9],[1982,2275151,1148,670,300,1396,1874.2,163.3,12,14],[1328,1499834,1129,623,257,1269,3712.8,328.7,14,19],[1303,1490479,1144,703,313,1402,1355.8,118.5,13,10],[1110,1213479,1093,531,251,1190,1760.8,161.1,17,63],[855,932017,1090,624,292,1291,1740.9,159.7,18,18],[1414,1510105,1068,651,301,1346,1299.5,121.7,20,15],[1670,1803981,1080,602,309,1275,1484.8,137.4,19,24],[2556,2822688,1104,628,299,1296,1597.4,144.6,15,16],[1277,1313495,1029,540,270,1047,5651.8,549.5,22,57],[1201,1218478,1015,603,274,1250,1301.2,128.2,24,23],[402,442880,1102,671,309,1408,1377.7,125.0,16,13],[1071,1144269,1068,576,271,1122,2064.1,193.2,21,38],[2740,2745031,1002,699,336,1326,1048.2,104.6,25,11],[2099,2067313,985,627,290,1226,1387.4,140.9,30,17],[1287,1254290,975,596,282,1243,1160.4,119.1,34,26],[494,506566,1025,580,263,1184,1407.8,137.3,23,35],[1006,975536,970,549,250,1193,1211.3,124.9,35,52],[1748,1705289,976,542,266,1143,1495.7,153.3,33,56],[1431,1413586,988,583,280,1208,1408.0,142.5,29,32],[830,830894,1001,570,265,1165,1490.5,148.9,26,40],[2301,2287355,994,591,273,1230,1623.0,163.3,28,29],[848,816672,963,568,278,1189,1221.6,126.8,37,43],[1361,1316608,967,602,296,1245,1120.0,115.8,36,25],[1490,1483558,996,619,290,1267,1232.3,123.8,27,20],[1194,1144971,959,584,256,1184,1230.8,128.3,38,31],[1814,1701529,938,608,280,1169,1157.0,123.3,43,22],[865,798028,923,574,253,1183,1093.2,118.5,45,39],[1340,1268045,946,609,278,1209,1087.4,114.9,40,21],[2784,2542976,913,570,269,1135,1097.8,120.2,47,41],[1342,1309848,976,581,270,1125,1431.7,146.7,32,34],[1327,1265038,953,549,268,1214,1161.1,121.8,39,53],[1307,1231613,942,577,273,1253,1059.4,112.4,42,37],[1119,1055544,943,568,268,1117,1191.8,126.3,41,44],[1637,1447813,884,565,250,1144,1056.7,119.5,55,45],[1670,1383269,828,543,251,1067,904.4,109.2,71,55],[742,723950,976,589,299,1129,1848.6,189.5,31,30],[730,665711,912,490,256,1065,1225.9,134.4,48,94],[1150,1068592,929,569,272,1155,1220.3,131.3,44,42],[856,769145,899,519,234,1006,2142.2,238.4,53,74],[1951,1680840,862,558,270,1079,957.7,111.2,61,48],[1058,911460,861,560,268,1099,979.8,113.7,62,46],[1026,931362,908,596,268,1198,1013.3,111.6,50,27],[1879,1549882,825,477,239,947,1773.8,215.0,73,101],[684,622445,910,516,275,1117,1247.9,137.1,49,75],[2145,1880554,877,535,263,1062,1274.3,145.3,56,61],[1132,989514,874,532,267,1112,1025.2,117.3,58,62],[2349,2095525,892,553,263,1100,1152.8,129.2,54,50],[1279,1087070,850,523,262,979,1210.5,142.4,65,72],[1119,1024599,916,557,260,1190,1136.8,124.2,46,49],[1799,1567242,871,528,266,1091,1034.9,118.8,59,64],[656,589554,899,558,260,1164,1101.9,122.6,52,47],[1389,1250018,900,551,281,1112,1057.2,117.5,51,51],[2303,1941708,843,583,281,1123,859.0,101.9,67,33],[2317,1976269,853,528,266,1082,963.7,113.0,63,65],[1067,925828,868,509,237,1100,1230.6,141.8,60,82],[1464,1149794,785,524,263,973,908.0,115.6,83,70],[1355,1187348,876,539,273,1014,1103.5,125.9,57,59],[1184,1004368,848,516,239,1062,1033.0,121.8,66,76],[1259,1053785,837,526,258,1039,976.3,116.7,68,66],[2707,2252527,832,580,279,1106,898.6,108.0,70,36],[890,757845,852,546,260,1081,948.1,111.3,64,54],[917,735579,802,536,259,1067,840.3,104.8,78,60],[1959,1638614,836,516,250,1021,1051.2,125.7,69,77],[968,801443,828,526,250,999,1049.7,126.8,72,67],[864,694485,804,496,247,986,985.0,122.5,77,88],[2027,1642301,810,487,231,976,1142.9,141.1,75,96],[1406,1152717,820,493,228,1008,1030.8,125.7,74,91],[858,664177,774,520,237,1059,802.6,103.7,86,73],[908,730676,805,526,254,1008,972.9,120.9,76,68],[4603,3693342,802,514,253,1002,1006.6,125.5,79,78],[1340,1067101,796,480,237,987,1057.0,132.7,81,100],[1053,817889,777,525,245,1018,867.0,111.6,85,69],[1213,931987,768,498,216,928,973.7,126.7,90,87],[741,538469,727,487,225,989,771.8,106.2,103,97],[2810,2169272,772,502,248,1013,865.3,112.1,87,86],[661,508130,769,503,256,1031,866.2,112.7,89,85],[612,485974,794,540,249,1023,912.0,114.9,82,58],[1415,1100707,778,488,245,961,983.6,126.5,84,95],[1177,938699,798,509,248,1027,884.5,110.9,80,83],[1235,930060,753,492,236,932,916.2,121.7,93,93],[484,370154,765,510,233,994,810.6,106.0,91,81],[2327,1764503,758,512,249,987,861.9,113.7,92,79],[3112,2331039,749,481,232,969,987.6,131.8,95,98],[1338,1030889,770,508,244,964,850.0,110.3,88,84],[1243,910280,732,512,253,950,758.6,103.6,99,80],[851,620585,729,451,233,881,952.6,130.6,102,112],[1254,939991,750,524,267,970,771.1,102.9,94,71],[1313,941670,717,471,238,869,954.9,133.1,106,103],[858,594194,693,460,239,878,748.2,108.0,112,108],[873,626664,718,494,240,908,766.7,106.8,105,90],[1028,716864,697,451,239,832,837.6,120.1,110,113],[773,565699,732,466,246,917,808.7,110.5,100,106],[1163,862706,742,495,246,892,892.0,120.2,96,89],[1278,938863,735,476,249,895,857.6,116.7,98,102],[686,478940,698,456,226,839,969.4,138.8,109,109],[1790,1289623,720,449,229,876,870.3,120.8,104,116],[950,677079,713,468,238,870,861.1,120.8,107,105],[356,225030,632,430,221,808,648.5,102.6,121,124],[1406,979218,696,462,249,827,839.8,120.6,111,107],[808,573219,709,481,249,931,772.2,108.8,108,99],[1070,780313,729,493,251,913,815.5,111.8,101,92],[1319,971477,737,468,241,868,1620.5,220.0,97,104],[1098,744949,678,422,216,812,960.1,141.5,113,125],[1044,694608,665,447,231,823,830.5,124.8,115,117],[1044,696341,667,456,214,845,726.2,108.9,114,110],[980,630280,643,442,213,778,882.1,137.2,119,120],[775,487433,629,450,223,792,633.9,100.8,122,115],[917,595051,649,456,225,830,650.9,100.3,116,111],[1154,745928,646,444,234,808,729.5,112.8,118,118],[1083,700605,647,433,236,803,773.1,119.5,117,122],[804,503030,626,440,238,792,657.9,105.2,123,121],[214,135480,633,444,248,702,698.5,110.3,120,119],[749,454882,607,405,208,765,737.0,121.4,124,126],[1416,844938,597,433,219,759,619.1,103.8,125,123],[323,178271,552,451,233,692,511.6,92.7,126,114]],"113":[[2022,4106103,2031,1021,435,2452,3185.8,156.9,1,1],[3163,5458160,1726,863,363,1942,4162.7,241.2,2,3],[656,995799,1518,751,325,1867,2142.2,141.1,3,10],[3129,4682598,1497,861,355,1825,2066.1,138.1,4,4],[3972,5896451,1485,793,347,1849,2049.2,138.0,5,7],[4221,6095570,1444,884,385,1818,1955.5,135.4,6,2],[1593,2186473,1373,856,368,1712,2441.1,177.8,7,5],[2720,3704883,1362,795,334,1699,1808.2,132.8,8,6],[1567,1939349,1238,754,332,1602,1583.0,127.9,9,8],[407,501999,1233,655,302,1562,1593.8,129.2,10,18],[1432,1743010,1217,724,315,1595,1832.6,150.6,11,12],[2744,3336908,1216,752,327,1481,2760.7,227.0,12,9],[1446,1746326,1208,675,289,1411,2143.3,177.5,13,16],[1310,1580367,1206,706,306,1467,1717.3,142.3,14,13],[1136,1324132,1166,572,265,1254,1898.9,162.9,15,43],[849,988326,1164,652,288,1384,2416.6,207.6,16,19],[1409,1602171,1137,692,315,1405,1423.0,125.1,17,14],[1697,1920237,1132,618,305,1327,1576.3,139.3,18,27],[2531,2854286,1128,635,297,1349,1585.8,140.6,19,22],[1317,1485332,1128,584,283,1126,7540.0,668.5,20,39],[1199,1307471,1090,636,293,1284,1761.3,161.5,21,21],[400,434313,1086,682,323,1445,1211.3,111.6,22,15],[1088,1178591,1083,568,264,1124,2436.4,224.9,23,47],[3163,3385232,1070,737,338,1419,1149.1,107.4,24,11],[2233,2382289,1067,671,304,1343,1323.7,124.1,25,17],[1289,1330467,1032,585,278,1308,1389.6,134.6,26,38],[498,511733,1028,572,280,1142,1522.6,148.2,27,44],[1010,1036064,1026,584,257,1267,1336.5,130.3,28,40],[1743,1787572,1026,576,283,1172,1610.2,157.0,29,42],[1402,1432958,1022,611,269,1289,1416.4,138.6,30,29],[831,845856,1018,568,280,1147,1434.1,140.9,31,48],[2314,2350544,1016,599,271,1272,1509.6,148.6,32,33],[839,850031,1013,611,298,1236,1428.1,141.0,33,30],[1356,1361328,1004,604,291,1233,1200.8,119.6,34,31],[1499,1504219,1003,638,295,1271,1231.4,122.7,35,20],[1235,1232266,998,633,286,1295,1197.7,120.0,36,23],[1748,1710589,979,618,295,1197,1311.1,134.0,37,28],[884,865858,979,598,267,1195,1187.5,121.2,38,34],[1335,1297885,972,621,280,1257,1129.6,116.2,39,25],[2775,2698134,972,571,281,1197,1225.2,126.0,40,45],[1307,1267281,970,583,268,1120,1266.4,130.6,41,41],[1354,1312503,969,551,267,1218,1166.5,120.3,42,57],[1348,1300819,965,570,269,1249,1140.0,118.1,43,46],[1145,1103763,964,552,257,1154,1258.3,130.5,44,56],[1641,1565035,954,568,268,1199,1506.9,158.0,45,49],[1809,1713885,947,567,273,1193,1147.8,121.2,46,50],[722,681240,944,623,297,1147,1157.7,122.7,47,24],[760,715623,942,538,258,1112,1312.3,139.4,48,68],[1126,1052425,935,563,272,1165,1180.4,126.3,49,52],[866,804115,929,531,249,1042,2451.0,264.0,50,73],[2034,1882294,925,590,271,1182,1079.8,116.7,51,35],[1077,996582,925,554,294,1114,1116.1,120.6,52,55],[1013,934052,922,600,285,1164,1054.6,114.4,53,32],[1904,1754807,922,492,239,1018,4735.4,513.8,54,95],[687,632735,921,547,259,1087,1247.2,135.4,55,61],[2186,1982035,907,547,259,1089,1263.5,139.3,56,62],[1122,1017610,907,523,253,1097,1149.0,126.7,57,81],[2415,2188110,906,557,252,1138,1176.3,129.8,58,54],[1279,1158382,906,539,281,1055,1323.5,146.1,59,66],[1116,1009661,905,540,251,1194,1073.1,118.6,60,65],[1813,1634480,902,567,281,1136,1091.0,121.0,61,51],[657,591030,900,548,242,1202,1088.7,121.0,62,59],[1417,1272872,898,562,279,1140,1093.2,121.7,63,53],[2375,2108463,888,588,271,1159,1182.7,133.2,64,36],[2349,2084566,887,543,260,1136,1082.3,122.0,65,63],[1070,948939,887,530,241,1127,1197.8,135.1,66,74],[1448,1277668,882,542,259,1036,1655.8,187.7,67,64],[1347,1184269,879,537,264,1032,1213.2,138.0,68,69],[1192,1035080,868,534,244,1068,1059.6,122.0,69,72],[1276,1105159,866,529,262,1057,1108.1,127.9,70,75],[2807,2428049,865,588,281,1129,1009.5,116.7,71,37],[896,775406,865,526,276,1076,991.6,114.6,72,79],[1134,977186,862,621,277,1143,888.4,103.1,73,26],[1951,1677902,860,539,261,1044,1131.5,131.6,74,67],[977,837774,857,550,258,1080,1058.1,123.4,75,58],[866,730899,844,536,254,1013,1021.6,121.0,76,70],[2047,1719743,840,492,235,1003,1191.8,141.9,77,96],[1384,1155582,835,498,242,1040,1056.0,126.5,78,91],[855,710137,831,548,252,1057,899.9,108.3,79,60],[929,771773,831,536,255,1044,1088.0,131.0,80,71],[4667,3830056,821,519,262,1026,1049.3,127.9,81,83],[1327,1088697,820,480,225,966,1124.8,137.1,82,108],[1126,914001,812,526,250,1036,942.0,116.0,83,80],[1196,963908,806,505,224,1026,1041.4,129.2,84,85],[730,582971,799,527,236,1049,986.5,123.5,85,77],[2819,2238441,794,510,235,1017,946.5,119.2,86,84],[631,500237,793,504,251,986,926.3,116.8,87,86],[632,499364,790,521,235,1026,902.9,114.3,88,82],[1412,1113813,789,493,236,980,1135.2,143.9,89,93],[1191,937116,787,490,246,1012,868.0,110.3,90,97],[1222,960945,786,503,233,952,992.1,126.2,91,88],[463,364012,786,499,253,1015,853.5,108.6,92,89],[2400,1870331,779,527,256,1020,843.5,108.2,93,78],[3146,2442711,776,504,249,1000,926.7,119.3,94,87],[1332,1031518,774,493,239,982,931.6,120.3,95,94],[1249,958497,767,528,263,985,832.8,108.5,96,76],[827,625339,756,473,245,938,943.8,124.8,97,111],[1257,946756,753,490,257,961,807.9,107.3,98,98],[1330,1001958,753,481,242,918,1071.7,142.3,99,107],[873,657192,753,479,252,957,802.9,106.7,100,109],[897,674475,752,494,225,957,1037.5,138.0,101,92],[999,751665,752,485,244,935,877.5,116.6,102,102],[751,563881,751,473,238,941,841.5,112.1,103,112],[1174,880506,750,484,242,929,917.2,122.3,104,104],[1291,964542,747,499,250,913,883.8,118.3,105,90],[674,503504,747,483,241,921,1038.1,139.0,106,106],[1790,1319460,737,469,234,895,945.0,128.2,107,113],[952,700926,736,467,242,938,893.8,121.4,108,114],[367,268798,732,485,253,887,828.7,113.1,109,103],[1399,1021456,730,490,243,868,962.7,131.8,110,99],[823,596659,725,486,248,926,850.1,117.3,111,101],[1100,788212,717,484,240,886,801.7,111.9,112,105],[1289,915993,711,477,238,899,775.7,109.2,113,110],[1092,763982,700,452,219,839,998.4,142.7,114,118],[1048,724424,691,457,230,836,892.8,129.2,115,117],[1041,712660,685,465,223,863,775.0,113.2,116,115],[976,647863,664,436,203,782,904.6,136.3,117,124],[778,515471,663,439,242,812,823.3,124.3,118,123],[902,595897,661,444,223,845,828.8,125.5,119,121],[1106,727663,658,458,241,807,775.0,117.8,120,116],[1081,710154,657,446,229,830,763.3,116.2,121,120],[820,529391,646,442,223,815,844.7,130.8,122,122],[217,137976,636,447,240,817,689.4,108.4,123,119],[764,475345,622,394,209,741,883.2,142.0,124,126],[1428,882554,618,432,220,777,670.4,108.5,125,125],[309,185484,600,488,239,750,540.2,90.0,126,100]]};
+      const LANDMARKS = [{"name":"板橋車站 / 新板特區","x":585.9,"y":390.1,"icon":"🚄"},{"name":"府中商圈","x":532.7,"y":464.8,"icon":"🚇"},{"name":"新埔站","x":641.5,"y":270.0,"icon":"🚇"},{"name":"江子翠站","x":695.9,"y":175.2,"icon":"🚇"},{"name":"亞東醫院 / 遠東園區","x":451.6,"y":602.2,"icon":"🏥"},{"name":"浮洲車站","x":354.9,"y":526.1,"icon":"🚆"},{"name":"溪崑生活圈 (沙崙)","x":190.5,"y":732.9,"icon":"🏘️"},{"name":"林本源園邸","x":474.6,"y":432.8,"icon":"🏮"}];
+      const CONTEXT_LABELS = [{"text":"↖ 大漢溪（對岸：新莊區）","x":359.8,"y":239.3,"rot":-38,"type":"river"},{"text":"↗ 新店溪・華江橋（對岸：台北市萬華區）","x":825.3,"y":92.5,"rot":22,"type":"river"},{"text":"↙ 樹林區","x":124.0,"y":626.2,"rot":0,"type":"dist"},{"text":"↓ 土城區","x":402.1,"y":786.3,"rot":0,"type":"dist"},{"text":"↘ 中和區","x":740.6,"y":532.8,"rot":0,"type":"dist"}];
+      const ONE_KM_SVG = 120.1;
+      const YEARS = ["100","101","102","103","104","105","106","107","108","109","110","111","112","113"];
+
+      const METRIC_CONFIG = {
+        a: {
+          label: "平均數 (萬元)",
+          unit: "千元",
+          steps: [
+            { limit: 700, color: "#fef0d9", text: "<70萬" },
+            { limit: 800, color: "#fdd49e", text: "70-80萬" },
+            { limit: 900, color: "#fdbb84", text: "80-90萬" },
+            { limit: 1000, color: "#fc8d59", text: "90-100萬" },
+            { limit: 1200, color: "#ef6548", text: "100-120萬" },
+            { limit: 1400, color: "#d7301f", text: "120-140萬" },
+            { limit: Infinity, color: "#990000", text: ">140萬" }
+          ]
+        },
+        m: {
+          label: "中位數 (萬元)",
+          unit: "千元",
+          steps: [
+            { limit: 460, color: "#edf8fb", text: "<46萬" },
+            { limit: 500, color: "#ccece6", text: "46-50萬" },
+            { limit: 550, color: "#99d8c9", text: "50-55萬" },
+            { limit: 600, color: "#66c2a4", text: "55-60萬" },
+            { limit: 700, color: "#2ca25f", text: "60-70萬" },
+            { limit: 800, color: "#006d2c", text: "70-80萬" },
+            { limit: Infinity, color: "#00441b", text: ">80萬" }
+          ]
+        },
+        q3: {
+          label: "第三分位數 Q3 (萬元)",
+          unit: "千元",
+          steps: [
+            { limit: 900, color: "#f2f0f7", text: "<90萬" },
+            { limit: 1050, color: "#dadaeb", text: "90-105萬" },
+            { limit: 1200, color: "#bcbddc", text: "105-120萬" },
+            { limit: 1400, color: "#9e9ac8", text: "120-140萬" },
+            { limit: 1700, color: "#756bb1", text: "140-170萬" },
+            { limit: Infinity, color: "#54278f", text: ">170萬" }
+          ]
+        },
+        q1: {
+          label: "第一分位數 Q1 (萬元)",
+          unit: "千元",
+          steps: [
+            { limit: 235, color: "#eff3ff", text: "<23.5萬" },
+            { limit: 255, color: "#c6dbef", text: "23.5-25.5萬" },
+            { limit: 280, color: "#9ecae1", text: "25.5-28萬" },
+            { limit: 310, color: "#6baed6", text: "28-31萬" },
+            { limit: 350, color: "#3182bd", text: "31-35萬" },
+            { limit: Infinity, color: "#08519c", text: ">35萬" }
+          ]
+        },
+        sd: {
+          label: "標準差 (萬元)",
+          unit: "千元",
+          steps: [
+            { limit: 900, color: "#feedde", text: "<90萬" },
+            { limit: 1200, color: "#fdd0a2", text: "90-120萬" },
+            { limit: 1600, color: "#fdae6b", text: "120-160萬" },
+            { limit: 2200, color: "#f16913", text: "160-220萬" },
+            { limit: Infinity, color: "#8c2d04", text: ">220萬" }
+          ]
+        },
+        u: {
+          label: "納稅戶數 (戶)",
+          unit: "戶",
+          steps: [
+            { limit: 800, color: "#f7fcf0", text: "<800戶" },
+            { limit: 1200, color: "#ccebc5", text: "800-1200" },
+            { limit: 1800, color: "#7bccc4", text: "1200-1800" },
+            { limit: 2600, color: "#2b8cbe", text: "1800-2600" },
+            { limit: Infinity, color: "#084081", text: ">2600戶" }
+          ]
+        }
+      };
+
+      let currentYear = "113";
+      let currentMetric = "a";
+      let currentZone = "ALL";
+      let selectedVillIdx = 0;
+      let showLabels = true;
+      let showLandmarks = true;
+      let isVerticalLayout = false;
+      let searchQuery = "";
+
+      // Table Sorting State
+      let sortKey = "a";
+      let sortDesc = true;
+
+      let scale = 1.0;
+      let panX = 0;
+      let panY = 0;
+      let isDragging = false;
+      let startX = 0, startY = 0;
+
+      const mapRoot = document.getElementById("map-root");
+      const contextLayer = document.getElementById("context-layer");
+      const villagesLayer = document.getElementById("villages-layer");
+      const labelsLayer = document.getElementById("labels-layer");
+      const landmarksLayer = document.getElementById("landmarks-layer");
+      const tooltip = document.getElementById("map-tooltip");
+      const mapContainer = document.getElementById("map-container");
+      const mainSplit = document.getElementById("main-split");
+      const sortSelect = document.getElementById("sort-select");
+      const sortDirBtn = document.getElementById("sort-dir-btn");
+
+      function shortZone(z) {
+        return z.replace("生活圈", "").split("・")[0];
+      }
+
+      function getVillObj(idx, yr = currentYear) {
+        const g = VILL_GEOMS[idx];
+        const y = YEARLY_DATA[yr][idx];
+        const prevYr = String(Number(yr) - 1);
+        const prevY = YEARLY_DATA[prevYr] ? YEARLY_DATA[prevYr][idx] : null;
+        const yoyNum = prevY && prevY[2] > 0 ? ((y[2] - prevY[2]) / prevY[2]) * 100 : null;
+        const yoyAvg = yoyNum !== null ? yoyNum.toFixed(1) : null;
+
+        const y100 = YEARLY_DATA["100"][idx];
+        const y113 = YEARLY_DATA["113"][idx];
+        const g14Num = y100 && y100[2] > 0 ? ((y113[2] - y100[2]) / y100[2]) * 100 : 0;
+
+        return {
+          idx,
+          n: g[0], z: g[1], x: g[2], y: g[3], d: g[4],
+          u: y[0], t: y[1], a: y[2], m: y[3],
+          q1: y[4], q3: y[5], sd: y[6], cv: y[7],
+          ra: y[8], rm: y[9],
+          yoy: yoyNum !== null ? yoyNum : -999,
+          yoyAvg,
+          g14: g14Num
+        };
+      }
+
+      function getAllVillagesForYear(yr = currentYear) {
+        return VILL_GEOMS.map((_, idx) => getVillObj(idx, yr));
+      }
+
+      function getColor(val, metricKey) {
+        const steps = METRIC_CONFIG[metricKey].steps;
+        for (let i = 0; i < steps.length; i++) {
+          if (val <= steps[i].limit) return steps[i].color;
+        }
+        return steps[steps.length - 1].color;
+      }
+
+      function fmtWan(kVal) {
+        return (kVal / 10).toFixed(1) + "萬";
+      }
+
+      function applyTransform() {
+        mapRoot.setAttribute("transform", `translate(${panX}, ${panY}) scale(${scale})`);
+      }
+
+      function renderContext() {
+        contextLayer.innerHTML = "";
+        CONTEXT_LABELS.forEach(c => {
+          const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          txt.setAttribute("x", c.x);
+          txt.setAttribute("y", c.y);
+          txt.setAttribute("text-anchor", "middle");
+          txt.setAttribute("dominant-baseline", "central");
+          txt.setAttribute("font-size", c.type === "river" ? "13" : "14");
+          txt.setAttribute("font-weight", "600");
+          txt.setAttribute("fill", c.type === "river" ? "#3b82f6" : "#64748b");
+          txt.setAttribute("opacity", "0.75");
+          if (c.rot) {
+            txt.setAttribute("transform", `rotate(${c.rot}, ${c.x}, ${c.y})`);
+          }
+          txt.textContent = c.text;
+          contextLayer.appendChild(txt);
+        });
+
+        const sbGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        sbGroup.setAttribute("transform", "translate(780, 945)");
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        line.setAttribute("d", `M0,-5 L0,0 L${ONE_KM_SVG},0 L${ONE_KM_SVG},-5`);
+        line.setAttribute("fill", "none");
+        line.setAttribute("stroke", "#475569");
+        line.setAttribute("stroke-width", "2");
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", ONE_KM_SVG / 2);
+        label.setAttribute("y", "-9");
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("font-size", "12");
+        label.setAttribute("font-weight", "600");
+        label.setAttribute("fill", "#475569");
+        label.textContent = "1 公里 (km)";
+        sbGroup.appendChild(line);
+        sbGroup.appendChild(label);
+        contextLayer.appendChild(sbGroup);
+      }
+
+      function renderLegend() {
+        const cfg = METRIC_CONFIG[currentMetric];
+        document.getElementById("legend-title").textContent = cfg.label;
+        const container = document.getElementById("legend-items");
+        container.innerHTML = cfg.steps.map(s => `
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:${s.color}"></span>
+            <span>${s.text}</span>
+          </span>
+        `).join("");
+      }
+
+      function updateHeaderAndBanner() {
+        const vills = getAllVillagesForYear(currentYear);
+        const allU = vills.reduce((s, v) => s + v.u, 0);
+        const allT = vills.reduce((s, v) => s + v.t, 0);
+        const distAvgK = Math.round(allT / allU);
+        const adYear = Number(currentYear) + 1911;
+
+        document.getElementById("header-year-badge").textContent =
+          `${currentYear}年度 (${adYear}${currentYear === "113" ? "・最新" : ""})`;
+        document.getElementById("header-summary").textContent =
+          `${currentYear}年度全區總計 ${allU.toLocaleString()} 納稅戶｜加權平均 ${(distAvgK/10).toFixed(1)} 萬（${distAvgK} 千元）｜支援 100~113 年切換`;
+
+        const list = currentZone === "ALL" ? vills : vills.filter(v => v.z === currentZone);
+        const zoneU = list.reduce((s, v) => s + v.u, 0);
+        const zoneT = list.reduce((s, v) => s + v.t, 0);
+        const wAvg = (zoneT / zoneU / 10).toFixed(1);
+        const sortedByA = [...list].sort((a, b) => b.a - a.a);
+        const topV = sortedByA[0];
+        const botV = sortedByA[sortedByA.length - 1];
+
+        document.getElementById("banner-title").textContent =
+          `${currentYear}年 ${currentZone === "ALL" ? "板橋區全區" : currentZone} (${list.length}里｜平均 ${wAvg}萬)`;
+        document.getElementById("banner-sub").textContent =
+          `最高：${topV.n} ${fmtWan(topV.a)}｜最低：${botV.n} ${fmtWan(botV.a)}`;
+      }
+
+      function renderMap() {
+        villagesLayer.innerHTML = "";
+        labelsLayer.innerHTML = "";
+        const vills = getAllVillagesForYear(currentYear);
+
+        vills.forEach(v => {
+          const inZone = currentZone === "ALL" || v.z === currentZone;
+          const val = v[currentMetric];
+          const fill = getColor(val, currentMetric);
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", v.d);
+          path.setAttribute("fill", fill);
+          path.setAttribute("stroke", "rgba(30,41,59,0.45)");
+          path.setAttribute("stroke-width", "0.85");
+          path.setAttribute("opacity", inZone ? "0.94" : "0.18");
+          path.setAttribute("class", "vill-path" + (selectedVillIdx === v.idx ? " vill-selected" : ""));
+
+          path.addEventListener("mouseenter", (e) => showTooltip(e, v));
+          path.addEventListener("mousemove", (e) => moveTooltip(e));
+          path.addEventListener("mouseleave", () => tooltip.classList.add("hidden"));
+          path.addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectVillage(v.idx, false);
+          });
+
+          villagesLayer.appendChild(path);
+
+          if (showLabels && inZone && (v.ra <= 20 || scale >= 1.55 || selectedVillIdx === v.idx)) {
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", v.x);
+            text.setAttribute("y", v.y);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("dominant-baseline", "central");
+            text.setAttribute("font-size", selectedVillIdx === v.idx ? "15" : "11.5");
+            text.setAttribute("font-weight", selectedVillIdx === v.idx ? "700" : "600");
+            text.setAttribute("fill", "#0f172a");
+            text.setAttribute("stroke", "rgba(255,255,255,0.9)");
+            text.setAttribute("stroke-width", "2.8");
+            text.setAttribute("paint-order", "stroke");
+            text.textContent = v.n.replace("里", "");
+            labelsLayer.appendChild(text);
+          }
+        });
+
+        landmarksLayer.innerHTML = "";
+        if (showLandmarks) {
+          LANDMARKS.forEach(lm => {
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            g.setAttribute("transform", `translate(${lm.x}, ${lm.y})`);
+            const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            bg.setAttribute("x", "-46");
+            bg.setAttribute("y", "-10");
+            bg.setAttribute("width", "92");
+            bg.setAttribute("height", "19");
+            bg.setAttribute("rx", "5");
+            bg.setAttribute("fill", "rgba(15,23,42,0.82)");
+            const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            txt.setAttribute("x", "0");
+            txt.setAttribute("y", "0");
+            txt.setAttribute("text-anchor", "middle");
+            txt.setAttribute("dominant-baseline", "central");
+            txt.setAttribute("font-size", "10.5");
+            txt.setAttribute("font-weight", "600");
+            txt.setAttribute("fill", "#f8fafc");
+            txt.textContent = `${lm.icon}${lm.name.split(" ")[0]}`;
+            g.appendChild(bg);
+            g.appendChild(txt);
+            landmarksLayer.appendChild(g);
+          });
+        }
+
+        applyTransform();
+      }
+
+      function showTooltip(e, v) {
+        const yoyHtml = v.yoyAvg !== null
+          ? `<span class="${Number(v.yoyAvg) >= 0 ? 'text-rose' : 'text-emerald'}" style="margin-left:4px;">(${Number(v.yoyAvg) >= 0 ? '+' : ''}${v.yoyAvg}%)</span>`
+          : "";
+        tooltip.innerHTML = `
+          <div style="font-weight:700;">${currentYear}年・${v.n} <span style="font-weight:400; opacity:0.75;">(${v.z})</span></div>
+          <div style="margin-top:2px;">平均數：<b class="text-amber">${fmtWan(v.a)}</b> (${v.a.toLocaleString()} 千元)${yoyHtml}｜第 <b>${v.ra}</b> 名</div>
+          <div>中位數：<b class="text-emerald">${fmtWan(v.m)}</b> (${v.m.toLocaleString()} 千元)｜第 <b>${v.rm}</b> 名</div>
+          <div style="opacity:0.75;">納稅戶：${v.u.toLocaleString()} 戶｜標準差：${v.sd.toLocaleString()} 千元</div>
+        `;
+        tooltip.classList.remove("hidden");
+        moveTooltip(e);
+      }
+
+      function moveTooltip(e) {
+        const rect = mapContainer.getBoundingClientRect();
+        let left = e.clientX - rect.left + 12;
+        let top = e.clientY - rect.top + 12;
+        if (left + 230 > rect.width) left = e.clientX - rect.left - 235;
+        if (top + 90 > rect.height) top = e.clientY - rect.top - 90;
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+      }
+
+      function renderTrendSparkline(villIdx) {
+        const svg = document.getElementById("trend-svg");
+        svg.innerHTML = "";
+        const series = YEARS.map(yr => ({
+          yr,
+          a: YEARLY_DATA[yr][villIdx][2],
+          m: YEARLY_DATA[yr][villIdx][3]
+        }));
+
+        const a100 = series[0].a;
+        const a113 = series[series.length - 1].a;
+        const totalGrowth = a100 > 0 ? (((a113 - a100) / a100) * 100).toFixed(1) : "0.0";
+        document.getElementById("detail-growth").textContent =
+          `100→113年平均 ${(a100/10).toFixed(1)}萬 → ${(a113/10).toFixed(1)}萬 (${Number(totalGrowth)>=0?'+':''}${totalGrowth}%)`;
+
+        const vals = series.flatMap(s => [s.a, s.m]);
+        const minV = Math.min(...vals) * 0.92;
+        const maxV = Math.max(...vals) * 1.05;
+        const W = 320, H = 54, padL = 8, padR = 8, padT = 7, padB = 13;
+        const plotW = W - padL - padR;
+        const plotH = H - padT - padB;
+
+        const getX = (i) => padL + (i / (YEARS.length - 1)) * plotW;
+        const getY = (v) => padT + plotH - ((v - minV) / Math.max(1, maxV - minV)) * plotH;
+
+        const curIdx = YEARS.indexOf(currentYear);
+        if (curIdx >= 0) {
+          const cx = getX(curIdx);
+          const vline = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          vline.setAttribute("x1", cx);
+          vline.setAttribute("y1", padT - 2);
+          vline.setAttribute("x2", cx);
+          vline.setAttribute("y2", H - padB + 2);
+          vline.setAttribute("stroke", "rgba(245, 158, 11, 0.45)");
+          vline.setAttribute("stroke-width", "1.5");
+          vline.setAttribute("stroke-dasharray", "2,2");
+          svg.appendChild(vline);
+        }
+
+        const medPts = series.map((s, i) => `${getX(i).toFixed(1)},${getY(s.m).toFixed(1)}`).join(" ");
+        const avgPts = series.map((s, i) => `${getX(i).toFixed(1)},${getY(s.a).toFixed(1)}`).join(" ");
+
+        const medPoly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        medPoly.setAttribute("points", medPts);
+        medPoly.setAttribute("fill", "none");
+        medPoly.setAttribute("stroke", "#10b981");
+        medPoly.setAttribute("stroke-width", "1.6");
+        svg.appendChild(medPoly);
+
+        const avgPoly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        avgPoly.setAttribute("points", avgPts);
+        avgPoly.setAttribute("fill", "none");
+        avgPoly.setAttribute("stroke", "#f59e0b");
+        avgPoly.setAttribute("stroke-width", "2");
+        svg.appendChild(avgPoly);
+
+        series.forEach((s, i) => {
+          const x = getX(i);
+          const ya = getY(s.a);
+          const ym = getY(s.m);
+          const isCur = s.yr === currentYear;
+
+          const cMed = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          cMed.setAttribute("cx", x);
+          cMed.setAttribute("cy", ym);
+          cMed.setAttribute("r", isCur ? "3.2" : "1.8");
+          cMed.setAttribute("fill", isCur ? "#059669" : "#10b981");
+          cMed.setAttribute("class", "trend-pt");
+          cMed.addEventListener("click", () => setYear(s.yr));
+          svg.appendChild(cMed);
+
+          const cAvg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          cAvg.setAttribute("cx", x);
+          cAvg.setAttribute("cy", ya);
+          cAvg.setAttribute("r", isCur ? "3.8" : "2.2");
+          cAvg.setAttribute("fill", isCur ? "#d97706" : "#f59e0b");
+          cAvg.setAttribute("stroke", isCur ? "#fff" : "none");
+          cAvg.setAttribute("stroke-width", "1");
+          cAvg.setAttribute("class", "trend-pt");
+          cAvg.innerHTML = `<title>${s.yr}年 平均:${fmtWan(s.a)} / 中位數:${fmtWan(s.m)}</title>`;
+          cAvg.addEventListener("click", () => setYear(s.yr));
+          svg.appendChild(cAvg);
+
+          if (i === 0 || i === 4 || i === 8 || i === 13 || isCur) {
+            const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            lbl.setAttribute("x", x);
+            lbl.setAttribute("y", H - 2);
+            lbl.setAttribute("text-anchor", "middle");
+            lbl.setAttribute("font-size", isCur ? "9.5" : "8.5");
+            lbl.setAttribute("font-weight", isCur ? "700" : "500");
+            lbl.setAttribute("fill", isCur ? "#d97706" : "#94a3b8");
+            lbl.textContent = s.yr + "年";
+            svg.appendChild(lbl);
+          }
+        });
+      }
+
+      function selectVillage(idx, centerOnMap) {
+        selectedVillIdx = idx;
+        const v = getVillObj(idx, currentYear);
+        document.getElementById("detail-rank").textContent = `平均 #${v.ra}`;
+        document.getElementById("detail-name").textContent = v.n;
+        document.getElementById("detail-zone").textContent = v.z;
+        document.getElementById("detail-units").textContent = `${currentYear}年｜${v.u.toLocaleString()} 戶`;
+        document.getElementById("detail-avg").textContent = `${fmtWan(v.a)} (#${v.ra})`;
+        document.getElementById("detail-med").textContent = `${fmtWan(v.m)} (#${v.rm})`;
+        document.getElementById("detail-q1q3").textContent = `${(v.q1/10).toFixed(0)}~${(v.q3/10).toFixed(0)}萬`;
+        document.getElementById("detail-sd").textContent = `${(v.sd/10).toFixed(1)}萬`;
+
+        renderTrendSparkline(idx);
+
+        if (centerOnMap) {
+          scale = Math.max(scale, 1.8);
+          panX = 500 - v.x * scale;
+          panY = 500 - v.y * scale;
+        }
+        renderMap();
+        renderTable();
+      }
+
+      function updateSortUI() {
+        sortSelect.value = sortKey;
+        if (sortKey === "n") {
+          sortDirBtn.textContent = sortDesc ? "▼ Z→A" : "▲ A→Z";
+        } else {
+          sortDirBtn.textContent = sortDesc ? "▼ 高→低" : "▲ 低→高";
+        }
+
+        document.querySelectorAll(".sortable-th").forEach(th => {
+          const key = th.dataset.sort;
+          const arrowEl = document.getElementById("arrow-" + key);
+          if (key === sortKey) {
+            th.classList.add("active-sort");
+            if (arrowEl) arrowEl.textContent = sortDesc ? "▼" : "▲";
+          } else {
+            th.classList.remove("active-sort");
+            if (arrowEl) arrowEl.textContent = "";
+          }
+        });
+      }
+
+      function renderTable() {
+        updateSortUI();
+        const vills = getAllVillagesForYear(currentYear);
+        const filtered = vills.filter(v => {
+          const matchZone = currentZone === "ALL" || v.z === currentZone;
+          const matchQuery = !searchQuery || v.n.includes(searchQuery) || v.z.includes(searchQuery);
+          return matchZone && matchQuery;
+        }).sort((a, b) => {
+          if (sortKey === "n") {
+            const cmp = a.n.localeCompare(b.n, "zh-Hant");
+            return sortDesc ? -cmp : cmp;
+          }
+          const va = a[sortKey];
+          const vb = b[sortKey];
+          if (va === vb) return b.a - a.a;
+          return sortDesc ? (vb - va) : (va - vb);
+        });
+
+        document.getElementById("list-count").textContent = `${filtered.length}里`;
+        const tbody = document.getElementById("ranking-tbody");
+        tbody.innerHTML = filtered.map((v, idx) => {
+          const isSel = selectedVillIdx === v.idx;
+          const yoyBadge = v.yoyAvg !== null
+            ? `<span class="${Number(v.yoyAvg) >= 0 ? 'text-rose' : 'text-emerald'}" style="font-size:11px; font-weight:500;">${Number(v.yoyAvg) >= 0 ? '+' : ''}${v.yoyAvg}%</span>`
+            : `<span style="font-size:11px; color:var(--muted-foreground);">—</span>`;
+          return `
+            <tr data-idx="${v.idx}" class="${isSel ? 'row-selected' : ''}">
+              <td style="color:var(--muted-foreground); font-size:11px;">${idx + 1}</td>
+              <td>
+                <span>${v.n}</span>
+                <span style="font-size:10.5px; color:var(--muted-foreground); margin-left:3px;">${shortZone(v.z)}</span>
+              </td>
+              <td class="text-right text-amber" style="font-weight:600;">${fmtWan(v.a)}</td>
+              <td class="text-right">${fmtWan(v.m)}</td>
+              <td class="text-right">${yoyBadge}</td>
+              <td class="text-right" style="color:var(--muted-foreground); font-size:11px;">${v.u.toLocaleString()}</td>
+            </tr>
+          `;
+        }).join("");
+
+        tbody.querySelectorAll("tr").forEach(tr => {
+          tr.addEventListener("click", () => {
+            selectVillage(Number(tr.dataset.idx), true);
+          });
+        });
+      }
+
+      function setYear(yr) {
+        if (!YEARLY_DATA[yr]) return;
+        currentYear = yr;
+        document.getElementById("year-select").value = yr;
+        updateHeaderAndBanner();
+        selectVillage(selectedVillIdx, false);
+      }
+
+      // Sort bindings (both Dropdown + Direction button + Table Header clicks)
+      sortSelect.addEventListener("change", (e) => {
+        sortKey = e.target.value;
+        sortDesc = sortKey !== "n";
+        renderTable();
+      });
+
+      sortDirBtn.addEventListener("click", () => {
+        sortDesc = !sortDesc;
+        renderTable();
+      });
+
+      document.querySelectorAll(".sortable-th").forEach(th => {
+        th.addEventListener("click", () => {
+          const clickedKey = th.dataset.sort;
+          if (sortKey === clickedKey) {
+            sortDesc = !sortDesc;
+          } else {
+            sortKey = clickedKey;
+            sortDesc = clickedKey !== "n";
+          }
+          renderTable();
+        });
+      });
+
+      document.getElementById("year-select").addEventListener("change", (e) => {
+        setYear(e.target.value);
+      });
+
+      document.getElementById("year-prev").addEventListener("click", () => {
+        const idx = YEARS.indexOf(currentYear);
+        if (idx > 0) setYear(YEARS[idx - 1]);
+      });
+
+      document.getElementById("year-next").addEventListener("click", () => {
+        const idx = YEARS.indexOf(currentYear);
+        if (idx < YEARS.length - 1) setYear(YEARS[idx + 1]);
+      });
+
+      document.getElementById("metric-select").addEventListener("change", (e) => {
+        currentMetric = e.target.value;
+        sortKey = currentMetric;
+        sortDesc = true;
+        renderLegend();
+        renderMap();
+        renderTable();
+      });
+
+      document.getElementById("zone-select").addEventListener("change", (e) => {
+        currentZone = e.target.value;
+        updateHeaderAndBanner();
+        renderMap();
+        renderTable();
+      });
+
+      document.getElementById("toggle-labels").addEventListener("click", (e) => {
+        showLabels = !showLabels;
+        e.target.textContent = `里名: ${showLabels ? "開" : "關"}`;
+        renderMap();
+      });
+
+      document.getElementById("toggle-landmarks").addEventListener("click", (e) => {
+        showLandmarks = !showLandmarks;
+        e.target.textContent = `地標: ${showLandmarks ? "開" : "關"}`;
+        renderMap();
+      });
+
+      document.getElementById("toggle-layout").addEventListener("click", (e) => {
+        isVerticalLayout = !isVerticalLayout;
+        if (isVerticalLayout) {
+          mainSplit.classList.add("layout-vertical");
+          e.target.textContent = "版型: 上下排列";
+        } else {
+          mainSplit.classList.remove("layout-vertical");
+          e.target.textContent = "版型: 左右並排";
+        }
+      });
+
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        searchQuery = e.target.value.trim();
+        renderTable();
+      });
+
+      document.getElementById("zoom-in").addEventListener("click", () => {
+        scale = Math.min(4.5, scale * 1.3);
+        panX = 500 - (500 - panX) * 1.3;
+        panY = 500 - (500 - panY) * 1.3;
+        renderMap();
+      });
+      document.getElementById("zoom-out").addEventListener("click", () => {
+        scale = Math.max(0.7, scale / 1.3);
+        panX = 500 - (500 - panX) / 1.3;
+        panY = 500 - (500 - panY) / 1.3;
+        renderMap();
+      });
+      document.getElementById("zoom-reset").addEventListener("click", () => {
+        scale = 1.0;
+        panX = 0;
+        panY = 0;
+        renderMap();
+      });
+
+      mapContainer.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+      });
+      window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const rect = mapContainer.getBoundingClientRect();
+        const factor = 1000 / Math.min(rect.width, rect.height);
+        panX += (e.clientX - startX) * factor;
+        panY += (e.clientY - startY) * factor;
+        startX = e.clientX;
+        startY = e.clientY;
+        applyTransform();
+      });
+      window.addEventListener("mouseup", () => {
+        isDragging = false;
+      });
+      mapContainer.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.15 : 0.87;
+        const nextScale = Math.min(4.5, Math.max(0.7, scale * factor));
+        const ratio = nextScale / scale;
+        panX = 500 - (500 - panX) * ratio;
+        panY = 500 - (500 - panY) * ratio;
+        scale = nextScale;
+        renderMap();
+      }, { passive: false });
+
+      renderContext();
+      renderLegend();
+      updateHeaderAndBanner();
+      selectVillage(0, false);
+    })();
+  </script>
+</body>
+</html>
+
